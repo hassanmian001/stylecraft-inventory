@@ -86,6 +86,7 @@ purane 0.1.3 installer mein updater code nahi tha. Isliye:
   Release ke assets mein `latest.yml` hona zaroori hai.
 - **Version wahi rehta hai:** `package.json` ka `version` barhana bhool gaye.
   electron-updater sirf zyada version par update karta hai.
-- **Errors dekhne hain:** app ko `--enable-logging` ke saath chalayein, ya
-  `%APPDATA%\StyleCraft Inventory\logs` check karein. Updater ki errors
-  console par `[updater]` prefix ke saath aati hain.
+- **Errors dekhne hain:** installed app ko command prompt se
+  `"StyleCraft Inventory.exe" --enable-logging` chala kar dekhein --
+  updater ki errors console par `[updater]` prefix ke saath aati hain.
+  (Alag log file nahi banti; chahen to `electron-log` add kiya ja sakta hai.)
