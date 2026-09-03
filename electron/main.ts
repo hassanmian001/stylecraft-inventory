@@ -15,6 +15,7 @@ import { getRendererTarget } from "./renderer-target.js";
 import { registerSalesHandlers } from "./sales-ipc.js";
 import { registerSettingsHandlers } from "./settings-ipc.js";
 import { registerStockHandlers } from "./stock-ipc.js";
+import { registerUpdateHandlers } from "./update-ipc.js";
 import { initAutoUpdater } from "./updater.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -76,6 +77,7 @@ void app.whenReady().then(() => {
   registerSalesHandlers(ipcMain);
   registerSettingsHandlers(ipcMain);
   registerStockHandlers(ipcMain);
+  registerUpdateHandlers(ipcMain, () => mainWindow);
   createWindow();
   initAutoUpdater(() => mainWindow);
 

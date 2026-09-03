@@ -542,6 +542,17 @@ export type StockApi = {
   adjust(input: StockAdjustmentInput): Promise<StockAdjustmentDto>;
 };
 
+export type UpdateCheckResult =
+  | { status: "dev-mode" }
+  | { status: "up-to-date"; currentVersion: string }
+  | { status: "update-available"; version: string }
+  | { status: "already-downloaded"; version: string }
+  | { status: "error"; message: string };
+
+export type UpdateApi = {
+  check(): Promise<UpdateCheckResult>;
+};
+
 export type StyleCraftApi = {
   audit: AuditApi;
   backup: BackupApi;
@@ -555,4 +566,5 @@ export type StyleCraftApi = {
   sales: SalesApi;
   settings: SettingsApi;
   stock: StockApi;
+  update: UpdateApi;
 };

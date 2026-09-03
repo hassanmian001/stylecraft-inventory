@@ -71,3 +71,7 @@ export const settingsChannels = {
 export const stockChannels = {
   adjust: "stock:adjust",
 } as const;
+
+export const updateChannels = {
+  check: "update:check",
+} as const;

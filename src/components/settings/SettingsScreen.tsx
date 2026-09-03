@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { styleCraftEmail, styleCraftPhone } from "@/lib/branding";
-import type { BackupResultDto, BackupSettingsDto, BusinessSettingsDto, RestoreResultDto } from "@/types/stylecraft-api";
+import type { BackupResultDto, BackupSettingsDto, BusinessSettingsDto, RestoreResultDto, UpdateCheckResult } from "@/types/stylecraft-api";
 
 const defaultBusinessForm: BusinessSettingsDto = {
   businessName: "StyleCraft",
@@ -17,6 +17,21 @@ function formatDateTime(value: Date) {
   return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
+function describeUpdateCheckResult(result: UpdateCheckResult): string {
+  switch (result.status) {
+    case "dev-mode":
+      return "Update checks are only available in the installed app, not while developing.";
+    case "up-to-date":
+      return `You're on the latest version (v${result.currentVersion}).`;
+    case "update-available":
+      return `Update v${result.version} found. It's downloading in the background — you'll be asked to restart once it's ready.`;
+    case "already-downloaded":
+      return `Update v${result.version} is ready. Check the dialog that just opened to restart and install.`;
+    case "error":
+      return `Could not check for updates: ${result.message}`;
+  }
+}
+
 export default function SettingsScreen() {
   const [backupSettings, setBackupSettings] = useState<BackupSettingsDto | null>(null);
   const [businessSettings, setBusinessSettings] = useState<BusinessSettingsDto | null>(null);
@@ -28,6 +43,8 @@ export default function SettingsScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [updateCheckResult, setUpdateCheckResult] = useState<UpdateCheckResult | null>(null);
+  const [isCheckingForUpdate, setIsCheckingForUpdate] = useState(false);
 
   async function loadSettings() {
     setIsLoading(true);
@@ -104,6 +121,22 @@ export default function SettingsScreen() {
     setBusinessForm((current) => ({ ...current, ...changes }));
   }
 
+  async function handleCheckForUpdates() {
+    setUpdateCheckResult(null);
+    setIsCheckingForUpdate(true);
+
+    try {
+      setUpdateCheckResult(await window.stylecraft.update.check());
+    } catch (caughtError) {
+      setUpdateCheckResult({
+        status: "error",
+        message: caughtError instanceof Error ? caughtError.message : "Could not check for updates.",
+      });
+    } finally {
+      setIsCheckingForUpdate(false);
+    }
+  }
+
   async function handleCreateBackup() {
     setError(null);
     setLastBackup(null);
@@ -163,6 +196,30 @@ export default function SettingsScreen() {
           {error}
         </div>
       ) : null}
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h3 className="font-semibold text-slate-950">Software updates</h3>
+            <p className="mt-1 text-sm text-slate-500">The app checks for updates automatically. Use this if you don't want to wait.</p>
+          </div>
+          <Button disabled={isCheckingForUpdate} onClick={handleCheckForUpdates} type="button" variant="ghost">
+            {isCheckingForUpdate ? "Checking..." : "Check for updates"}
+          </Button>
+        </div>
+        {updateCheckResult ? (
+          <div
+            className={`mt-4 rounded-2xl border px-4 py-3 text-sm ${
+              updateCheckResult.status === "error"
+                ? "border-red-200 bg-red-50 text-red-700"
+                : "border-green-200 bg-green-50 text-green-800"
+            }`}
+            role="status"
+          >
+            {describeUpdateCheckResult(updateCheckResult)}
+          </div>
+        ) : null}
+      </section>
 
       {isLoading || backupSettings === null || businessSettings === null ? (
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">Loading settings...</div>

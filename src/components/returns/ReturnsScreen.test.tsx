@@ -92,6 +92,7 @@ describe("ReturnsScreen", () => {
       returns: returnsApi,
       sales: {} as never,
       settings: {} as never,
+      update: {} as never,
       stock: {} as never,
     } satisfies StyleCraftApi;
   });

@@ -89,6 +89,7 @@ describe("ProductsScreen", () => {
       reports: reportsApi,
       sales: salesApi,
       settings: {} as never,
+      update: {} as never,
       stock: stockApi,
     };
   });

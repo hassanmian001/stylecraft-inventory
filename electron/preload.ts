@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-import { auditChannels, backupChannels, contactsChannels, dashboardChannels, invoiceChannels, productChannels, purchaseChannels, reportsChannels, returnsChannels, salesChannels, settingsChannels, stockChannels } from "./ipc-channels.js";
+import { auditChannels, backupChannels, contactsChannels, dashboardChannels, invoiceChannels, productChannels, purchaseChannels, reportsChannels, returnsChannels, salesChannels, settingsChannels, stockChannels, updateChannels } from "./ipc-channels.js";
 import type { StyleCraftApi } from "../src/types/stylecraft-api.js";
 
 const stylecraftApi: StyleCraftApi = {
@@ -65,6 +65,9 @@ const stylecraftApi: StyleCraftApi = {
   },
   stock: {
     adjust: (input) => ipcRenderer.invoke(stockChannels.adjust, input),
+  },
+  update: {
+    check: () => ipcRenderer.invoke(updateChannels.check),
   },
 };
 

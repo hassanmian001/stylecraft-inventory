@@ -125,7 +125,7 @@ describe("ReportsScreen", () => {
     vi.spyOn(window, "open").mockReturnValue(openedWindow as unknown as Window);
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
 
-    window.stylecraft = { backup: backupApi, dashboard: dashboardApi, invoices: invoicesApi, products: productsApi, purchases: purchasesApi, reports: reportsApi, sales: salesApi, settings: {} as never };
+    window.stylecraft = { backup: backupApi, dashboard: dashboardApi, invoices: invoicesApi, products: productsApi, purchases: purchasesApi, reports: reportsApi, sales: salesApi, settings: {} as never, update: {} as never };
   });
 
   it("renders sales report data from the API", async () => {

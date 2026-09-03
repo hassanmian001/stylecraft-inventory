@@ -71,6 +71,7 @@ describe("ContactsScreen", () => {
       reports: {} as never,
       sales: {} as never,
       settings: {} as never,
+      update: {} as never,
     } satisfies StyleCraftApi;
   });
 

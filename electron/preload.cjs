@@ -74,6 +74,10 @@ const stockChannels = {
   adjust: "stock:adjust",
 };
 
+const updateChannels = {
+  check: "update:check",
+};
+
 const stylecraftApi = {
   audit: {
     list: (filters) => ipcRenderer.invoke(auditChannels.list, filters),
@@ -136,6 +140,9 @@ const stylecraftApi = {
   },
   stock: {
     adjust: (input) => ipcRenderer.invoke(stockChannels.adjust, input),
+  },
+  update: {
+    check: () => ipcRenderer.invoke(updateChannels.check),
   },
 };
 

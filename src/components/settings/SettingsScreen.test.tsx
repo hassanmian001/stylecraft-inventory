@@ -6,11 +6,12 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import SettingsScreen from "./SettingsScreen";
-import type { BackupApi, DashboardApi, InvoiceApi, ProductApi, PurchaseApi, ReportsApi, SalesApi, SettingsApi } from "@/types/stylecraft-api";
+import type { BackupApi, DashboardApi, InvoiceApi, ProductApi, PurchaseApi, ReportsApi, SalesApi, SettingsApi, UpdateApi } from "@/types/stylecraft-api";
 
 describe("SettingsScreen", () => {
   let backupApi: BackupApi;
   let settingsApi: SettingsApi;
+  let updateApi: UpdateApi;
 
   afterEach(() => {
     cleanup();
@@ -40,6 +41,9 @@ describe("SettingsScreen", () => {
       }),
       updateBusinessSettings: vi.fn().mockImplementation(async (input) => ({ ...input, invoicePrefix: input.invoicePrefix.toUpperCase() })),
     };
+    updateApi = {
+      check: vi.fn().mockResolvedValue({ status: "up-to-date", currentVersion: "0.1.4" }),
+    };
 
     window.stylecraft = {
       backup: backupApi,
@@ -50,6 +54,7 @@ describe("SettingsScreen", () => {
       reports: { getReports: vi.fn().mockResolvedValue({}) } as unknown as ReportsApi,
       sales: { list: vi.fn().mockResolvedValue([]), create: vi.fn().mockResolvedValue({}), listCustomers: vi.fn().mockResolvedValue([]), createCustomer: vi.fn().mockResolvedValue({}) } as unknown as SalesApi,
       settings: settingsApi,
+      update: updateApi,
     };
   });
 
@@ -121,5 +126,27 @@ describe("SettingsScreen", () => {
       expect(backupApi.restore).toHaveBeenCalledWith("E:\\StyleCraftBackups\\backup.sqlite");
     });
     expect(await screen.findByRole("status")).toHaveTextContent("Database restored");
+  });
+
+  it("checks for updates and shows the result", async () => {
+    render(<SettingsScreen />);
+
+    await screen.findByDisplayValue("D:\\Backups");
+    fireEvent.click(screen.getByRole("button", { name: "Check for updates" }));
+
+    expect(updateApi.check).toHaveBeenCalled();
+    expect(await screen.findByRole("status")).toHaveTextContent("You're on the latest version (v0.1.4).");
+  });
+
+  it("shows an error when the update check fails", async () => {
+    updateApi.check = vi.fn().mockRejectedValue(new Error("Network unreachable"));
+    window.stylecraft.update = updateApi;
+
+    render(<SettingsScreen />);
+
+    await screen.findByDisplayValue("D:\\Backups");
+    fireEvent.click(screen.getByRole("button", { name: "Check for updates" }));
+
+    expect(await screen.findByRole("status")).toHaveTextContent("Could not check for updates: Network unreachable");
   });
 });
