@@ -8,6 +8,8 @@ describe("database schema", () => {
       "audit_logs",
       "categories",
       "customers",
+      "payments",
+      "product_variants",
       "products",
       "purchase_items",
       "purchase_return_items",

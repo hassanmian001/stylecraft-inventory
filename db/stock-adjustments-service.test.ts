@@ -47,7 +47,7 @@ describe("stock adjustment service", () => {
     const product = createProduct(databasePath, makeProductInput());
 
     const adjustment = adjustStock(databasePath, {
-      productId: product.id,
+      variantId: product.variants[0].id,
       newStock: 8,
       reason: "Physical count",
       actorName: "Owner",
@@ -91,11 +91,11 @@ describe("stock adjustment service", () => {
     const databasePath = makeTempDatabasePath();
     const product = createProduct(databasePath, makeProductInput({ currentStock: 5 }));
 
-    const adjustment = adjustStock(databasePath, { productId: product.id, newStock: 2, reason: "Damaged items" });
+    const adjustment = adjustStock(databasePath, { variantId: product.variants[0].id, newStock: 2, reason: "Damaged items" });
 
     expect(adjustment.quantityChange).toBe(-3);
     expect(adjustment.stockAfter).toBe(2);
-    expect(() => adjustStock(databasePath, { productId: product.id, newStock: -1, reason: "Invalid" })).toThrow(StockAdjustmentValidationError);
+    expect(() => adjustStock(databasePath, { variantId: product.variants[0].id, newStock: -1, reason: "Invalid" })).toThrow(StockAdjustmentValidationError);
   });
 
   it("rejects no-op, missing reason, missing product, and inactive product adjustments", () => {
@@ -103,9 +103,9 @@ describe("stock adjustment service", () => {
     const product = createProduct(databasePath, makeProductInput({ currentStock: 5 }));
     const inactiveProduct = createProduct(databasePath, makeProductInput({ sku: "INACTIVE", isActive: false }));
 
-    expect(() => adjustStock(databasePath, { productId: product.id, newStock: 5, reason: "No change" })).toThrow(StockAdjustmentValidationError);
-    expect(() => adjustStock(databasePath, { productId: product.id, newStock: 4, reason: " " })).toThrow(StockAdjustmentValidationError);
+    expect(() => adjustStock(databasePath, { variantId: product.variants[0].id, newStock: 5, reason: "No change" })).toThrow(StockAdjustmentValidationError);
+    expect(() => adjustStock(databasePath, { variantId: product.variants[0].id, newStock: 4, reason: " " })).toThrow(StockAdjustmentValidationError);
     expect(() => adjustStock(databasePath, { productId: 999, newStock: 4, reason: "Missing" })).toThrow(StockAdjustmentValidationError);
-    expect(() => adjustStock(databasePath, { productId: inactiveProduct.id, newStock: 4, reason: "Inactive" })).toThrow(StockAdjustmentValidationError);
+    expect(() => adjustStock(databasePath, { variantId: inactiveProduct.variants[0].id, newStock: 4, reason: "Inactive" })).toThrow(StockAdjustmentValidationError);
   });
 });

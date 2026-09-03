@@ -58,7 +58,7 @@ describe("returns service", () => {
     const sale = createSale(databasePath, {
       customerName: "Walk-in",
       saleDate: new Date("2026-07-10T00:00:00.000Z"),
-      items: [{ productId: product.id, quantity: 3, unitPriceCents: 1_500, discountAmountCents: 300 }],
+      items: [{ variantId: product.variants[0].id, quantity: 3, unitPriceCents: 1_500, discountAmountCents: 300 }],
     });
     const candidate = listSaleReturnCandidates(databasePath)[0];
 
@@ -96,7 +96,7 @@ describe("returns service", () => {
     const product = createProduct(databasePath, makeProductInput({ currentStock: 5 }));
     const sale = createSale(databasePath, {
       saleDate: new Date("2026-07-10T00:00:00.000Z"),
-      items: [{ productId: product.id, quantity: 1, unitPriceCents: 1_500 }],
+      items: [{ variantId: product.variants[0].id, quantity: 1, unitPriceCents: 1_500 }],
     });
     const saleItemId = listSaleReturnCandidates(databasePath)[0].items[0].saleItemId;
 
@@ -115,7 +115,7 @@ describe("returns service", () => {
     const purchase = createPurchase(databasePath, {
       supplierName: "Fabric House",
       purchaseDate: new Date("2026-07-10T00:00:00.000Z"),
-      items: [{ productId: product.id, quantity: 4, unitCostCents: 1_250 }],
+      items: [{ variantId: product.variants[0].id, quantity: 4, unitCostCents: 1_250 }],
     });
     const candidate = listPurchaseReturnCandidates(databasePath)[0];
 

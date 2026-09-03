@@ -2,7 +2,8 @@ import { desc, eq } from "drizzle-orm";
 
 import { createDb } from "./client.js";
 import { runMigrations } from "./migrate.js";
-import { categories, customers, products, purchaseItems, purchases, saleItems, sales, suppliers } from "./schema.js";
+import { formatVariantLabel } from "./products-service.js";
+import { categories, customers, productVariants, products, purchaseItems, purchases, saleItems, sales, suppliers } from "./schema.js";
 
 export type ReportFilters = {
   startDate?: Date | string | null;
@@ -45,8 +46,10 @@ export type ProfitReportRowDto = {
 
 export type StockReportRowDto = {
   productId: number;
+  variantId: number;
   name: string;
   sku: string;
+  variantLabel: string;
   categoryName: string | null;
   currentStock: number;
   lowStockThreshold: number;
@@ -218,27 +221,52 @@ export function getReports(databasePath?: string, filters: ReportFilters = {}): 
       itemCount: db.select().from(purchaseItems).where(eq(purchaseItems.purchaseId, purchase.id)).all().length,
     }));
     const profitRows = Array.from(profitBySale.values()).sort((a, b) => b.saleDate.getTime() - a.saleDate.getTime() || b.saleId - a.saleId);
+    // One row per size/colour: a style can hold plenty of stock overall while
+    // one size has run out, and that is exactly what the shop needs to see.
     const stockRows: StockReportRowDto[] = db
       .select({
         productId: products.id,
+        variantId: productVariants.id,
         name: products.name,
-        sku: products.sku,
+        sku: productVariants.sku,
+        variantSize: productVariants.size,
+        variantColor: productVariants.color,
         categoryName: categories.name,
-        currentStock: products.currentStock,
-        lowStockThreshold: products.lowStockThreshold,
-        purchasePriceCents: products.purchasePriceCents,
-        sellingPriceCents: products.sellingPriceCents,
-        isActive: products.isActive,
+        currentStock: productVariants.currentStock,
+        variantLowStockThreshold: productVariants.lowStockThreshold,
+        productLowStockThreshold: products.lowStockThreshold,
+        variantPurchasePriceCents: productVariants.purchasePriceCents,
+        productPurchasePriceCents: products.purchasePriceCents,
+        variantSellingPriceCents: productVariants.sellingPriceCents,
+        productSellingPriceCents: products.sellingPriceCents,
+        isActive: productVariants.isActive,
       })
-      .from(products)
+      .from(productVariants)
+      .innerJoin(products, eq(productVariants.productId, products.id))
       .leftJoin(categories, eq(products.categoryId, categories.id))
-      .orderBy(products.name)
+      .orderBy(products.name, productVariants.size, productVariants.color)
       .all()
-      .map((product) => ({
-        ...product,
-        inventoryValueCents: product.currentStock * product.purchasePriceCents,
-        isLowStock: product.currentStock <= product.lowStockThreshold,
-      }));
+      .map((row) => {
+        const lowStockThreshold = row.variantLowStockThreshold ?? row.productLowStockThreshold;
+        const purchasePriceCents = row.variantPurchasePriceCents ?? row.productPurchasePriceCents;
+        const sellingPriceCents = row.variantSellingPriceCents ?? row.productSellingPriceCents;
+
+        return {
+          productId: row.productId,
+          variantId: row.variantId,
+          name: row.name,
+          sku: row.sku,
+          variantLabel: formatVariantLabel(row.variantSize || null, row.variantColor || null),
+          categoryName: row.categoryName,
+          currentStock: row.currentStock,
+          lowStockThreshold,
+          purchasePriceCents,
+          sellingPriceCents,
+          inventoryValueCents: row.currentStock * purchasePriceCents,
+          isLowStock: row.currentStock <= lowStockThreshold,
+          isActive: row.isActive,
+        };
+      });
 
     return {
       filters,
@@ -253,8 +281,8 @@ export function getReports(databasePath?: string, filters: ReportFilters = {}): 
         costCents: profitRows.reduce((sum, row) => sum + row.costCents, 0),
         discountCents: profitRows.reduce((sum, row) => sum + row.discountAmountCents, 0),
         profitCents: profitRows.reduce((sum, row) => sum + row.profitAmountCents, 0),
-        stockQuantity: stockRows.reduce((sum, product) => sum + product.currentStock, 0),
-        inventoryValueCents: stockRows.reduce((sum, product) => sum + product.inventoryValueCents, 0),
+        stockQuantity: stockRows.reduce((sum, row) => sum + row.currentStock, 0),
+        inventoryValueCents: stockRows.reduce((sum, row) => sum + row.inventoryValueCents, 0),
       },
     };
   } finally {

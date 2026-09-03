@@ -78,10 +78,10 @@ describe("purchase service validation", () => {
     const inactiveProduct = createProduct(databasePath, makeProductInput({ sku: "INACTIVE" }));
     markProductInactive(databasePath, inactiveProduct.id);
 
-    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ productId: product.id, quantity: 0, unitCostCents: 100 }] }))).toThrow(
+    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ variantId: product.variants[0].id, quantity: 0, unitCostCents: 100 }] }))).toThrow(
       PurchaseValidationError,
     );
-    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ productId: product.id, quantity: 1, unitCostCents: -1 }] }))).toThrow(
+    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ variantId: product.variants[0].id, quantity: 1, unitCostCents: -1 }] }))).toThrow(
       PurchaseValidationError,
     );
     expect(() =>
@@ -89,17 +89,17 @@ describe("purchase service validation", () => {
         databasePath,
         makePurchaseInput({
           items: [
-            { productId: product.id, quantity: 1, unitCostCents: 100 },
-            { productId: product.id, quantity: 2, unitCostCents: 100 },
+            { variantId: product.variants[0].id, quantity: 1, unitCostCents: 100 },
+            { variantId: product.variants[0].id, quantity: 2, unitCostCents: 100 },
           ],
         }),
       ),
     ).toThrow(PurchaseValidationError);
-    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ productId: 9999, quantity: 1, unitCostCents: 100 }] }))).toThrow(
+    expect(() => createPurchase(databasePath, makePurchaseInput({ items: [{ variantId: 9999, quantity: 1, unitCostCents: 100 }] }))).toThrow(
       PurchaseValidationError,
     );
     expect(() =>
-      createPurchase(databasePath, makePurchaseInput({ items: [{ productId: inactiveProduct.id, quantity: 1, unitCostCents: 100 }] })),
+      createPurchase(databasePath, makePurchaseInput({ items: [{ variantId: inactiveProduct.variants[0].id, quantity: 1, unitCostCents: 100 }] })),
     ).toThrow(PurchaseValidationError);
   });
 });
@@ -111,7 +111,7 @@ describe("purchase service", () => {
 
     const purchase = createPurchase(
       databasePath,
-      makePurchaseInput({ items: [{ productId: product.id, quantity: 4, unitCostCents: 1_250 }] }),
+      makePurchaseInput({ items: [{ variantId: product.variants[0].id, quantity: 4, unitCostCents: 1_250 }] }),
     );
 
     expect(purchase).toMatchObject({
@@ -150,8 +150,8 @@ describe("purchase service", () => {
       databasePath,
       makePurchaseInput({
         items: [
-          { productId: shirt.id, quantity: 3, unitCostCents: 1_000 },
-          { productId: pants.id, quantity: 2, unitCostCents: 2_500 },
+          { variantId: shirt.variants[0].id, quantity: 3, unitCostCents: 1_000 },
+          { variantId: pants.variants[0].id, quantity: 2, unitCostCents: 2_500 },
         ],
       }),
     );
@@ -180,8 +180,8 @@ describe("purchase service", () => {
         databasePath,
         makePurchaseInput({
           items: [
-            { productId: product.id, quantity: 4, unitCostCents: 100 },
-            { productId: 9999, quantity: 1, unitCostCents: 100 },
+            { variantId: product.variants[0].id, quantity: 4, unitCostCents: 100 },
+            { variantId: 9999, quantity: 1, unitCostCents: 100 },
           ],
         }),
       ),
@@ -220,8 +220,8 @@ describe("purchase service", () => {
         supplierId: supplier.id,
         supplierName: null,
         items: [
-          { productId: shirt.id, quantity: 1, unitCostCents: 1_000 },
-          { productId: pants.id, quantity: 2, unitCostCents: 1_500 },
+          { variantId: shirt.variants[0].id, quantity: 1, unitCostCents: 1_000 },
+          { variantId: pants.variants[0].id, quantity: 2, unitCostCents: 1_500 },
         ],
       }),
     );

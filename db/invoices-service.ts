@@ -2,7 +2,8 @@ import { eq } from "drizzle-orm";
 
 import { createDb } from "./client.js";
 import { runMigrations } from "./migrate.js";
-import { customers, products, saleItems, sales, settings } from "./schema.js";
+import { formatVariantLabel } from "./products-service.js";
+import { customers, productVariants, products, saleItems, sales, settings } from "./schema.js";
 
 const defaultBusinessPhone = "+92 326 0609031";
 const defaultBusinessEmail = "stylecraftpk.com@gmail.com";
@@ -19,6 +20,7 @@ export type InvoiceBusinessSettingsDto = {
 export type InvoiceLineItemDto = {
   id: number;
   productId: number;
+  variantLabel: string;
   productName: string;
   productSku: string;
   quantity: number;
@@ -104,12 +106,14 @@ export function getInvoiceBySaleId(databasePath: string | undefined, saleId: num
       throw new InvoiceValidationError("Sale was not found.");
     }
 
-    const items = db
+    const itemRows = db
       .select({
         id: saleItems.id,
         productId: saleItems.productId,
         productName: products.name,
         productSku: products.sku,
+        variantSize: productVariants.size,
+        variantColor: productVariants.color,
         quantity: saleItems.quantity,
         unitPriceCents: saleItems.unitPriceCents,
         discountAmountCents: saleItems.discountAmountCents,
@@ -117,8 +121,14 @@ export function getInvoiceBySaleId(databasePath: string | undefined, saleId: num
       })
       .from(saleItems)
       .innerJoin(products, eq(saleItems.productId, products.id))
+      .leftJoin(productVariants, eq(saleItems.variantId, productVariants.id))
       .where(eq(saleItems.saleId, saleId))
       .all();
+
+    const items = itemRows.map(({ variantSize, variantColor, ...item }) => ({
+      ...item,
+      variantLabel: formatVariantLabel(variantSize || null, variantColor || null),
+    }));
 
     return {
       ...sale,

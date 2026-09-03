@@ -72,30 +72,30 @@ describe("sales service validation", () => {
     const inactiveProduct = createProduct(databasePath, makeProductInput({ sku: "INACTIVE" }));
     markProductInactive(databasePath, inactiveProduct.id);
 
-    expect(() => createSale(databasePath, makeSaleInput({ items: [{ productId: product.id, quantity: 0, unitPriceCents: 100 }] }))).toThrow(
+    expect(() => createSale(databasePath, makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 0, unitPriceCents: 100 }] }))).toThrow(
       SaleValidationError,
     );
-    expect(() => createSale(databasePath, makeSaleInput({ items: [{ productId: product.id, quantity: 1, unitPriceCents: -1 }] }))).toThrow(
+    expect(() => createSale(databasePath, makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 1, unitPriceCents: -1 }] }))).toThrow(
       SaleValidationError,
     );
     expect(() =>
-      createSale(databasePath, makeSaleInput({ items: [{ productId: product.id, quantity: 1, unitPriceCents: 100, discountAmountCents: 101 }] })),
+      createSale(databasePath, makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 1, unitPriceCents: 100, discountAmountCents: 101 }] })),
     ).toThrow(SaleValidationError);
     expect(() =>
       createSale(
         databasePath,
         makeSaleInput({
           items: [
-            { productId: product.id, quantity: 1, unitPriceCents: 100 },
-            { productId: product.id, quantity: 2, unitPriceCents: 100 },
+            { variantId: product.variants[0].id, quantity: 1, unitPriceCents: 100 },
+            { variantId: product.variants[0].id, quantity: 2, unitPriceCents: 100 },
           ],
         }),
       ),
     ).toThrow(SaleValidationError);
-    expect(() => createSale(databasePath, makeSaleInput({ items: [{ productId: 9999, quantity: 1, unitPriceCents: 100 }] }))).toThrow(
+    expect(() => createSale(databasePath, makeSaleInput({ items: [{ variantId: 9999, quantity: 1, unitPriceCents: 100 }] }))).toThrow(
       SaleValidationError,
     );
-    expect(() => createSale(databasePath, makeSaleInput({ items: [{ productId: inactiveProduct.id, quantity: 1, unitPriceCents: 100 }] }))).toThrow(
+    expect(() => createSale(databasePath, makeSaleInput({ items: [{ variantId: inactiveProduct.variants[0].id, quantity: 1, unitPriceCents: 100 }] }))).toThrow(
       SaleValidationError,
     );
   });
@@ -108,7 +108,7 @@ describe("sales service", () => {
 
     const sale = createSale(
       databasePath,
-      makeSaleInput({ items: [{ productId: product.id, quantity: 2, unitPriceCents: 1_500, discountAmountCents: 200 }] }),
+      makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 2, unitPriceCents: 1_500, discountAmountCents: 200 }] }),
     );
 
     expect(sale).toMatchObject({
@@ -163,8 +163,8 @@ describe("sales service", () => {
       databasePath,
       makeSaleInput({
         items: [
-          { productId: shirt.id, quantity: 2, unitPriceCents: 1_500 },
-          { productId: pants.id, quantity: 3, unitPriceCents: 3_000, discountAmountCents: 500 },
+          { variantId: shirt.variants[0].id, quantity: 2, unitPriceCents: 1_500 },
+          { variantId: pants.variants[0].id, quantity: 3, unitPriceCents: 3_000, discountAmountCents: 500 },
         ],
       }),
     );
@@ -190,7 +190,7 @@ describe("sales service", () => {
     const product = createProduct(databasePath, makeProductInput({ sku: "ROLLBACK-1", currentStock: 5 }));
     const beforeCounts = tableCounts(databasePath);
 
-    expect(() => createSale(databasePath, makeSaleInput({ items: [{ productId: product.id, quantity: 6, unitPriceCents: 1_500 }] }))).toThrow(
+    expect(() => createSale(databasePath, makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 6, unitPriceCents: 1_500 }] }))).toThrow(
       SaleValidationError,
     );
 
@@ -227,8 +227,8 @@ describe("sales service", () => {
         customerId: customer.id,
         customerName: null,
         items: [
-          { productId: shirt.id, quantity: 1, unitPriceCents: 1_500 },
-          { productId: pants.id, quantity: 2, unitPriceCents: 2_500 },
+          { variantId: shirt.variants[0].id, quantity: 1, unitPriceCents: 1_500 },
+          { variantId: pants.variants[0].id, quantity: 2, unitPriceCents: 2_500 },
         ],
       }),
     );

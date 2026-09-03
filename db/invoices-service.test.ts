@@ -83,7 +83,7 @@ describe("invoice service", () => {
 
     const sale = createSale(
       databasePath,
-      makeSaleInput({ customerId: customer.id, items: [{ productId: product.id, quantity: 2, unitPriceCents: 2_500, discountAmountCents: 500 }] }),
+      makeSaleInput({ customerId: customer.id, items: [{ variantId: product.variants[0].id, quantity: 2, unitPriceCents: 2_500, discountAmountCents: 500 }] }),
     );
 
     const invoice = getInvoiceBySaleId(databasePath, sale.id);
@@ -125,7 +125,7 @@ describe("invoice service", () => {
   it("uses safe business defaults when settings are absent", () => {
     const databasePath = makeTempDatabasePath();
     const product = createProduct(databasePath, makeProductInput({ sku: "DEFAULTS" }));
-    const sale = createSale(databasePath, makeSaleInput({ items: [{ productId: product.id, quantity: 1, unitPriceCents: 2_499 }] }));
+    const sale = createSale(databasePath, makeSaleInput({ items: [{ variantId: product.variants[0].id, quantity: 1, unitPriceCents: 2_499 }] }));
 
     expect(getInvoiceBySaleId(databasePath, sale.id).business).toEqual({
       businessName: "StyleCraft",

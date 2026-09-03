@@ -31,6 +31,7 @@ export const invoiceChannels = {
 
 export const productChannels = {
   list: "products:list",
+  get: "products:get",
   create: "products:create",
   update: "products:update",
   markInactive: "products:markInactive",
@@ -58,7 +59,9 @@ export const returnsChannels = {
 
 export const salesChannels = {
   list: "sales:list",
+  get: "sales:get",
   create: "sales:create",
+  update: "sales:update",
   listCustomers: "customers:list",
   createCustomer: "customers:create",
 } as const;
@@ -66,6 +69,20 @@ export const salesChannels = {
 export const settingsChannels = {
   getBusinessSettings: "settings:getBusinessSettings",
   updateBusinessSettings: "settings:updateBusinessSettings",
+} as const;
+
+export const ledgerChannels = {
+  getSummary: "ledger:getSummary",
+  getStatement: "ledger:getStatement",
+  recordPayment: "ledger:recordPayment",
+  deletePayment: "ledger:deletePayment",
+} as const;
+
+export const securityChannels = {
+  getEditPasswordStatus: "security:getEditPasswordStatus",
+  setEditPassword: "security:setEditPassword",
+  clearEditPassword: "security:clearEditPassword",
+  verifyEditPassword: "security:verifyEditPassword",
 } as const;
 
 export const stockChannels = {

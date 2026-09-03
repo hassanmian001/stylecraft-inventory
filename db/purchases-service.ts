@@ -2,7 +2,9 @@ import { desc, eq } from "drizzle-orm";
 
 import { createDb } from "./client.js";
 import { runMigrations } from "./migrate.js";
-import { products, purchaseItems, purchases, stockMovements, suppliers } from "./schema.js";
+import { formatVariantLabel, rollupProductStock } from "./products-service.js";
+import { payments, productVariants, products, purchaseItems, purchases, stockMovements, suppliers } from "./schema.js";
+import { loadVariantWithProduct } from "./variant-lookup.js";
 
 export type SupplierInput = {
   name: string;
@@ -19,7 +21,7 @@ export type SupplierDto = SupplierInput & {
 };
 
 export type PurchaseItemInput = {
-  productId: number;
+  variantId: number;
   quantity: number;
   unitCostCents: number;
 };
@@ -28,6 +30,7 @@ export type PurchaseInput = {
   supplierId?: number | null;
   supplierName?: string | null;
   purchaseDate: Date | string;
+  amountPaidCents?: number;
   notes?: string | null;
   items: PurchaseItemInput[];
 };
@@ -35,8 +38,11 @@ export type PurchaseInput = {
 export type PurchaseItemDto = {
   id: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
+  variantSku: string | null;
   quantity: number;
   unitCostCents: number;
   totalCostCents: number;
@@ -48,6 +54,8 @@ export type PurchaseDetailDto = {
   supplierName: string | null;
   purchaseDate: Date;
   totalAmountCents: number;
+  amountPaidCents: number;
+  balanceDueCents: number;
   notes: string | null;
   items: PurchaseItemDto[];
   createdAt: Date;
@@ -120,33 +128,43 @@ function normalizePurchaseInput(input: PurchaseInput) {
     throw new PurchaseValidationError("At least one purchase item is required.");
   }
 
-  const productIds = new Set<number>();
+  const variantIds = new Set<number>();
   const items = input.items.map((item) => {
-    validatePositiveInteger(item.productId, "Product");
+    validatePositiveInteger(item.variantId, "Product size/colour");
     validatePositiveInteger(item.quantity, "Quantity");
     validateNonNegativeInteger(item.unitCostCents, "Unit cost");
 
-    if (productIds.has(item.productId)) {
-      throw new PurchaseValidationError("Each product can appear only once per purchase.");
+    if (variantIds.has(item.variantId)) {
+      throw new PurchaseValidationError("Each size/colour can appear only once per purchase.");
     }
 
-    productIds.add(item.productId);
+    variantIds.add(item.variantId);
 
     return {
-      productId: item.productId,
+      variantId: item.variantId,
       quantity: item.quantity,
       unitCostCents: item.unitCostCents,
       totalCostCents: item.quantity * item.unitCostCents,
     };
   });
 
+  const totalAmountCents = items.reduce((sum, item) => sum + item.totalCostCents, 0);
+  const amountPaidCents = input.amountPaidCents ?? totalAmountCents;
+
+  validateNonNegativeInteger(amountPaidCents, "Amount paid");
+
+  if (amountPaidCents > totalAmountCents) {
+    throw new PurchaseValidationError("Amount paid cannot be more than the purchase total.");
+  }
+
   return {
     supplierId: input.supplierId ?? null,
     supplierName,
     purchaseDate,
+    amountPaidCents,
     notes,
     items,
-    totalAmountCents: items.reduce((sum, item) => sum + item.totalCostCents, 0),
+    totalAmountCents,
   };
 }
 
@@ -171,6 +189,7 @@ function getPurchaseDetail(db: ReturnType<typeof createDb>["db"], id: number): P
       supplierName: suppliers.name,
       purchaseDate: purchases.purchaseDate,
       totalAmountCents: purchases.totalAmountCents,
+      amountPaidCents: purchases.amountPaidCents,
       notes: purchases.notes,
       createdAt: purchases.createdAt,
       updatedAt: purchases.updatedAt,
@@ -184,23 +203,34 @@ function getPurchaseDetail(db: ReturnType<typeof createDb>["db"], id: number): P
     throw new PurchaseValidationError("Purchase was not found.");
   }
 
-  const items = db
+  const itemRows = db
     .select({
       id: purchaseItems.id,
       productId: purchaseItems.productId,
+      variantId: purchaseItems.variantId,
       productName: products.name,
       productSku: products.sku,
+      variantSize: productVariants.size,
+      variantColor: productVariants.color,
+      variantSku: productVariants.sku,
       quantity: purchaseItems.quantity,
       unitCostCents: purchaseItems.unitCostCents,
       totalCostCents: purchaseItems.totalCostCents,
     })
     .from(purchaseItems)
     .innerJoin(products, eq(purchaseItems.productId, products.id))
+    .leftJoin(productVariants, eq(purchaseItems.variantId, productVariants.id))
     .where(eq(purchaseItems.purchaseId, id))
     .all();
 
+  const items = itemRows.map(({ variantSize, variantColor, ...item }) => ({
+    ...item,
+    variantLabel: formatVariantLabel(variantSize || null, variantColor || null),
+  }));
+
   return {
     ...row,
+    balanceDueCents: row.totalAmountCents - row.amountPaidCents,
     items,
   };
 }
@@ -262,43 +292,45 @@ export function createPurchase(databasePath: string | undefined, input: Purchase
           supplierId,
           purchaseDate: normalizedInput.purchaseDate,
           totalAmountCents: normalizedInput.totalAmountCents,
+          amountPaidCents: normalizedInput.amountPaidCents,
           notes: normalizedInput.notes,
         })
         .returning({ id: purchases.id })
         .get();
 
       for (const item of normalizedInput.items) {
-        const product = tx.select().from(products).where(eq(products.id, item.productId)).get();
+        const { variant, product } = loadVariantWithProduct(tx, item.variantId, (message) => {
+          throw new PurchaseValidationError(message);
+        });
 
-        if (product === undefined) {
-          throw new PurchaseValidationError("Product was not found.");
-        }
-
-        if (!product.isActive) {
+        if (!product.isActive || !variant.isActive) {
           throw new PurchaseValidationError("Inactive products cannot be purchased.");
         }
 
-        const stockBefore = product.currentStock;
+        const stockBefore = variant.currentStock;
         const stockAfter = stockBefore + item.quantity;
 
         tx.insert(purchaseItems)
           .values({
             purchaseId: insertedPurchase.id,
-            productId: item.productId,
+            productId: product.id,
+            variantId: variant.id,
             quantity: item.quantity,
             unitCostCents: item.unitCostCents,
             totalCostCents: item.totalCostCents,
           })
           .run();
 
-        tx.update(products)
+        tx.update(productVariants)
           .set({ currentStock: stockAfter, updatedAt: new Date() })
-          .where(eq(products.id, item.productId))
+          .where(eq(productVariants.id, variant.id))
           .run();
+        rollupProductStock(tx, product.id);
 
         tx.insert(stockMovements)
           .values({
-            productId: item.productId,
+            productId: product.id,
+            variantId: variant.id,
             movementType: "purchase",
             referenceType: "purchase",
             referenceId: insertedPurchase.id,
@@ -306,6 +338,23 @@ export function createPurchase(databasePath: string | undefined, input: Purchase
             stockBefore,
             stockAfter,
             notes: normalizedInput.notes,
+          })
+          .run();
+      }
+
+      // Money handed over at purchase time is a ledger entry too, so a supplier
+      // balance is always invoices minus payments with nothing counted twice.
+      if (supplierId !== null && normalizedInput.amountPaidCents > 0) {
+        tx.insert(payments)
+          .values({
+            partyType: "supplier",
+            partyId: supplierId,
+            direction: "out",
+            amountCents: normalizedInput.amountPaidCents,
+            paymentDate: normalizedInput.purchaseDate,
+            method: null,
+            notes: "Paid with purchase",
+            purchaseId: insertedPurchase.id,
           })
           .run();
       }
@@ -331,6 +380,7 @@ export function listPurchases(databasePath?: string): PurchaseHistoryDto[] {
         supplierName: suppliers.name,
         purchaseDate: purchases.purchaseDate,
         totalAmountCents: purchases.totalAmountCents,
+        amountPaidCents: purchases.amountPaidCents,
         notes: purchases.notes,
         createdAt: purchases.createdAt,
         updatedAt: purchases.updatedAt,
@@ -342,6 +392,7 @@ export function listPurchases(databasePath?: string): PurchaseHistoryDto[] {
 
     return rows.map((row) => ({
       ...row,
+      balanceDueCents: row.totalAmountCents - row.amountPaidCents,
       itemCount: db.select().from(purchaseItems).where(eq(purchaseItems.purchaseId, row.id)).all().length,
     }));
   } finally {

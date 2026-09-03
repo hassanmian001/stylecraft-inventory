@@ -2,9 +2,11 @@ import { desc, eq } from "drizzle-orm";
 
 import { createDb } from "./client.js";
 import { runMigrations } from "./migrate.js";
+import { formatVariantLabel, rollupProductStock } from "./products-service.js";
 import {
   auditLogs,
   customers,
+  productVariants,
   products,
   purchaseItems,
   purchaseReturnItems,
@@ -17,6 +19,7 @@ import {
   stockMovements,
   suppliers,
 } from "./schema.js";
+import { loadVariantWithProduct } from "./variant-lookup.js";
 
 export type ReturnItemInput = {
   sourceItemId: number;
@@ -42,8 +45,10 @@ export type PurchaseReturnInput = {
 export type SaleReturnableItemDto = {
   saleItemId: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
   soldQuantity: number;
   returnedQuantity: number;
   returnableQuantity: number;
@@ -65,8 +70,10 @@ export type SaleReturnCandidateDto = {
 export type PurchaseReturnableItemDto = {
   purchaseItemId: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
   purchasedQuantity: number;
   returnedQuantity: number;
   returnableQuantity: number;
@@ -187,8 +194,11 @@ export function listSaleReturnCandidates(databasePath?: string): SaleReturnCandi
         customerName: customers.name,
         saleItemId: saleItems.id,
         productId: saleItems.productId,
+        variantId: saleItems.variantId,
         productName: products.name,
         productSku: products.sku,
+        variantSize: productVariants.size,
+        variantColor: productVariants.color,
         soldQuantity: saleItems.quantity,
         unitPriceCents: saleItems.unitPriceCents,
         unitCostCents: saleItems.unitCostCents,
@@ -199,6 +209,7 @@ export function listSaleReturnCandidates(databasePath?: string): SaleReturnCandi
       .from(saleItems)
       .innerJoin(sales, eq(saleItems.saleId, sales.id))
       .innerJoin(products, eq(saleItems.productId, products.id))
+      .leftJoin(productVariants, eq(saleItems.variantId, productVariants.id))
       .leftJoin(customers, eq(sales.customerId, customers.id))
       .orderBy(desc(sales.saleDate), desc(sales.id))
       .all();
@@ -226,8 +237,10 @@ export function listSaleReturnCandidates(databasePath?: string): SaleReturnCandi
       candidate.items.push({
         saleItemId: row.saleItemId,
         productId: row.productId,
+        variantId: row.variantId,
         productName: row.productName,
         productSku: row.productSku,
+        variantLabel: formatVariantLabel(row.variantSize || null, row.variantColor || null),
         soldQuantity: row.soldQuantity,
         returnedQuantity,
         returnableQuantity,
@@ -260,16 +273,20 @@ export function listPurchaseReturnCandidates(databasePath?: string): PurchaseRet
         supplierName: suppliers.name,
         purchaseItemId: purchaseItems.id,
         productId: purchaseItems.productId,
+        variantId: purchaseItems.variantId,
         productName: products.name,
         productSku: products.sku,
+        variantSize: productVariants.size,
+        variantColor: productVariants.color,
         purchasedQuantity: purchaseItems.quantity,
         unitCostCents: purchaseItems.unitCostCents,
         totalCostCents: purchaseItems.totalCostCents,
-        currentStock: products.currentStock,
+        currentStock: productVariants.currentStock,
       })
       .from(purchaseItems)
       .innerJoin(purchases, eq(purchaseItems.purchaseId, purchases.id))
       .innerJoin(products, eq(purchaseItems.productId, products.id))
+      .leftJoin(productVariants, eq(purchaseItems.variantId, productVariants.id))
       .leftJoin(suppliers, eq(purchases.supplierId, suppliers.id))
       .orderBy(desc(purchases.purchaseDate), desc(purchases.id))
       .all();
@@ -296,12 +313,14 @@ export function listPurchaseReturnCandidates(databasePath?: string): PurchaseRet
       candidate.items.push({
         purchaseItemId: row.purchaseItemId,
         productId: row.productId,
+        variantId: row.variantId,
         productName: row.productName,
         productSku: row.productSku,
+        variantLabel: formatVariantLabel(row.variantSize || null, row.variantColor || null),
         purchasedQuantity: row.purchasedQuantity,
         returnedQuantity,
         returnableQuantity,
-        currentStock: row.currentStock,
+        currentStock: row.currentStock ?? 0,
         unitCostCents: row.unitCostCents,
         totalCostCents: row.totalCostCents,
       });
@@ -340,11 +359,13 @@ export function createSaleReturn(databasePath: string | undefined, input: SaleRe
           throw new ReturnValidationError("Sale return item was not found on the selected sale.");
         }
 
-        const product = tx.select().from(products).where(eq(products.id, saleItem.productId)).get();
-
-        if (product === undefined) {
-          throw new ReturnValidationError("Product was not found.");
+        if (saleItem.variantId === null) {
+          throw new ReturnValidationError("This sale line has no size/colour recorded and cannot be returned.");
         }
+
+        const { variant, product } = loadVariantWithProduct(tx, saleItem.variantId, (message) => {
+          throw new ReturnValidationError(message);
+        });
 
         const returnedQuantity = tx
           .select()
@@ -362,6 +383,7 @@ export function createSaleReturn(databasePath: string | undefined, input: SaleRe
           ...item,
           saleItem,
           product,
+          variant,
           discountAmountCents: Math.round((saleItem.discountAmountCents * item.quantity) / saleItem.quantity),
           totalAmountCents: Math.round((saleItem.totalAmountCents * item.quantity) / saleItem.quantity),
           profitReversalCents: Math.round((saleItem.profitAmountCents * item.quantity) / saleItem.quantity),
@@ -375,7 +397,7 @@ export function createSaleReturn(databasePath: string | undefined, input: SaleRe
         .get();
 
       for (const row of returnRows) {
-        const stockBefore = row.product.currentStock;
+        const stockBefore = row.variant.currentStock;
         const stockAfter = stockBefore + row.quantity;
 
         tx.insert(saleReturnItems)
@@ -383,6 +405,7 @@ export function createSaleReturn(databasePath: string | undefined, input: SaleRe
             saleReturnId: insertedReturn.id,
             saleItemId: row.saleItem.id,
             productId: row.product.id,
+            variantId: row.variant.id,
             quantity: row.quantity,
             unitPriceCents: row.saleItem.unitPriceCents,
             discountAmountCents: row.discountAmountCents,
@@ -391,10 +414,12 @@ export function createSaleReturn(databasePath: string | undefined, input: SaleRe
           })
           .run();
 
-        tx.update(products).set({ currentStock: stockAfter, updatedAt: new Date() }).where(eq(products.id, row.product.id)).run();
+        tx.update(productVariants).set({ currentStock: stockAfter, updatedAt: new Date() }).where(eq(productVariants.id, row.variant.id)).run();
+        rollupProductStock(tx, row.product.id);
         tx.insert(stockMovements)
           .values({
             productId: row.product.id,
+            variantId: row.variant.id,
             movementType: "return",
             referenceType: "sale_return",
             referenceId: insertedReturn.id,
@@ -458,11 +483,13 @@ export function createPurchaseReturn(databasePath: string | undefined, input: Pu
           throw new ReturnValidationError("Purchase return item was not found on the selected purchase.");
         }
 
-        const product = tx.select().from(products).where(eq(products.id, purchaseItem.productId)).get();
-
-        if (product === undefined) {
-          throw new ReturnValidationError("Product was not found.");
+        if (purchaseItem.variantId === null) {
+          throw new ReturnValidationError("This purchase line has no size/colour recorded and cannot be returned.");
         }
+
+        const { variant, product } = loadVariantWithProduct(tx, purchaseItem.variantId, (message) => {
+          throw new ReturnValidationError(message);
+        });
 
         const returnedQuantity = tx
           .select()
@@ -476,14 +503,15 @@ export function createPurchaseReturn(databasePath: string | undefined, input: Pu
           throw new ReturnValidationError(`Cannot return more than purchased quantity for ${product.name}.`);
         }
 
-        if (product.currentStock < item.quantity) {
-          throw new ReturnValidationError(`Cannot return ${product.name} to supplier because only ${product.currentStock} are in stock.`);
+        if (variant.currentStock < item.quantity) {
+          throw new ReturnValidationError(`Cannot return ${product.name} to supplier because only ${variant.currentStock} are in stock.`);
         }
 
         return {
           ...item,
           purchaseItem,
           product,
+          variant,
           totalCostCents: Math.round((purchaseItem.totalCostCents * item.quantity) / purchaseItem.quantity),
         };
       });
@@ -495,7 +523,7 @@ export function createPurchaseReturn(databasePath: string | undefined, input: Pu
         .get();
 
       for (const row of returnRows) {
-        const stockBefore = row.product.currentStock;
+        const stockBefore = row.variant.currentStock;
         const stockAfter = stockBefore - row.quantity;
 
         tx.insert(purchaseReturnItems)
@@ -503,16 +531,19 @@ export function createPurchaseReturn(databasePath: string | undefined, input: Pu
             purchaseReturnId: insertedReturn.id,
             purchaseItemId: row.purchaseItem.id,
             productId: row.product.id,
+            variantId: row.variant.id,
             quantity: row.quantity,
             unitCostCents: row.purchaseItem.unitCostCents,
             totalCostCents: row.totalCostCents,
           })
           .run();
 
-        tx.update(products).set({ currentStock: stockAfter, updatedAt: new Date() }).where(eq(products.id, row.product.id)).run();
+        tx.update(productVariants).set({ currentStock: stockAfter, updatedAt: new Date() }).where(eq(productVariants.id, row.variant.id)).run();
+        rollupProductStock(tx, row.product.id);
         tx.insert(stockMovements)
           .values({
             productId: row.product.id,
+            variantId: row.variant.id,
             movementType: "return",
             referenceType: "purchase_return",
             referenceId: insertedReturn.id,

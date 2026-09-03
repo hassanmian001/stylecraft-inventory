@@ -72,8 +72,8 @@ describe("dashboard service", () => {
       makeSaleInput({
         saleDate: new Date(2026, 6, 9, 10),
         items: [
-          { productId: shirt.id, quantity: 3, unitPriceCents: 2_000 },
-          { productId: pants.id, quantity: 1, unitPriceCents: 3_000, discountAmountCents: 500 },
+          { variantId: shirt.variants[0].id, quantity: 3, unitPriceCents: 2_000 },
+          { variantId: pants.variants[0].id, quantity: 1, unitPriceCents: 3_000, discountAmountCents: 500 },
         ],
       }),
     );
@@ -81,14 +81,14 @@ describe("dashboard service", () => {
       databasePath,
       makeSaleInput({
         saleDate: new Date(2026, 6, 8, 10),
-        items: [{ productId: belt.id, quantity: 1, unitPriceCents: 1_500 }],
+        items: [{ variantId: belt.variants[0].id, quantity: 1, unitPriceCents: 1_500 }],
       }),
     );
     createSale(
       databasePath,
       makeSaleInput({
         saleDate: new Date(2026, 5, 30, 10),
-        items: [{ productId: shirt.id, quantity: 1, unitPriceCents: 2_000 }],
+        items: [{ variantId: shirt.variants[0].id, quantity: 1, unitPriceCents: 2_000 }],
       }),
     );
 
@@ -101,8 +101,8 @@ describe("dashboard service", () => {
     expect(summary.currentMonthSalesCents).toBe(10_000);
     expect(summary.currentMonthProfitCents).toBe(4_500);
     expect(summary.lowStockProducts).toEqual([
-      { id: belt.id, name: "Leather Belt", sku: "BELT", currentStock: 0, lowStockThreshold: 2 },
-      { id: pants.id, name: "Chino Pants", sku: "PANTS", currentStock: 3, lowStockThreshold: 4 },
+      { id: belt.id, variantId: belt.variants[0].id, name: "Leather Belt", sku: "BELT", variantLabel: "Standard", currentStock: 0, lowStockThreshold: 2 },
+      { id: pants.id, variantId: pants.variants[0].id, name: "Chino Pants", sku: "PANTS", variantLabel: "Standard", currentStock: 3, lowStockThreshold: 4 },
     ]);
     expect(summary.bestSellingProducts).toEqual([
       { productId: shirt.id, name: "Oxford Shirt", sku: "SHIRT", quantitySold: 4, totalSalesCents: 8_000 },

@@ -31,8 +31,23 @@ const invoiceChannels = {
   getBySaleId: "invoices:getBySaleId",
 };
 
+const ledgerChannels = {
+  getSummary: "ledger:getSummary",
+  getStatement: "ledger:getStatement",
+  recordPayment: "ledger:recordPayment",
+  deletePayment: "ledger:deletePayment",
+};
+
+const securityChannels = {
+  getEditPasswordStatus: "security:getEditPasswordStatus",
+  setEditPassword: "security:setEditPassword",
+  clearEditPassword: "security:clearEditPassword",
+  verifyEditPassword: "security:verifyEditPassword",
+};
+
 const productChannels = {
   list: "products:list",
+  get: "products:get",
   create: "products:create",
   update: "products:update",
   markInactive: "products:markInactive",
@@ -60,6 +75,8 @@ const returnsChannels = {
 
 const salesChannels = {
   list: "sales:list",
+  get: "sales:get",
+  update: "sales:update",
   create: "sales:create",
   listCustomers: "customers:list",
   createCustomer: "customers:create",
@@ -105,8 +122,15 @@ const stylecraftApi = {
   invoices: {
     getBySaleId: (saleId) => ipcRenderer.invoke(invoiceChannels.getBySaleId, saleId),
   },
+  ledger: {
+    getSummary: () => ipcRenderer.invoke(ledgerChannels.getSummary),
+    getStatement: (partyType, partyId) => ipcRenderer.invoke(ledgerChannels.getStatement, partyType, partyId),
+    recordPayment: (input) => ipcRenderer.invoke(ledgerChannels.recordPayment, input),
+    deletePayment: (id) => ipcRenderer.invoke(ledgerChannels.deletePayment, id),
+  },
   products: {
     list: (filters) => ipcRenderer.invoke(productChannels.list, filters),
+    get: (id) => ipcRenderer.invoke(productChannels.get, id),
     create: (input) => ipcRenderer.invoke(productChannels.create, input),
     update: (id, input) => ipcRenderer.invoke(productChannels.update, id, input),
     markInactive: (id) => ipcRenderer.invoke(productChannels.markInactive, id),
@@ -130,9 +154,17 @@ const stylecraftApi = {
   },
   sales: {
     list: () => ipcRenderer.invoke(salesChannels.list),
+    get: (id) => ipcRenderer.invoke(salesChannels.get, id),
+    update: (id, input, password, actorName) => ipcRenderer.invoke(salesChannels.update, id, input, password, actorName),
     create: (input) => ipcRenderer.invoke(salesChannels.create, input),
     listCustomers: () => ipcRenderer.invoke(salesChannels.listCustomers),
     createCustomer: (input) => ipcRenderer.invoke(salesChannels.createCustomer, input),
+  },
+  security: {
+    getEditPasswordStatus: () => ipcRenderer.invoke(securityChannels.getEditPasswordStatus),
+    setEditPassword: (newPassword, currentPassword) => ipcRenderer.invoke(securityChannels.setEditPassword, newPassword, currentPassword),
+    clearEditPassword: (currentPassword) => ipcRenderer.invoke(securityChannels.clearEditPassword, currentPassword),
+    verifyEditPassword: (password) => ipcRenderer.invoke(securityChannels.verifyEditPassword, password),
   },
   settings: {
     getBusinessSettings: () => ipcRenderer.invoke(settingsChannels.getBusinessSettings),

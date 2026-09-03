@@ -2,12 +2,15 @@ import { eq } from "drizzle-orm";
 
 import { createDb } from "./client.js";
 import { runMigrations } from "./migrate.js";
-import { products, saleItems, sales } from "./schema.js";
+import { formatVariantLabel } from "./products-service.js";
+import { productVariants, products, saleItems, sales } from "./schema.js";
 
 export type DashboardLowStockProductDto = {
   id: number;
+  variantId: number;
   name: string;
   sku: string;
+  variantLabel: string;
   currentStock: number;
   lowStockThreshold: number;
 };
@@ -96,6 +99,36 @@ export function getDashboardSummary(databasePath?: string, now = new Date()): Da
       }
     }
 
+    // Low stock is judged per size/colour: a style is not really covered just
+    // because its other sizes are stacked up.
+    const lowStockVariants: DashboardLowStockProductDto[] = db
+      .select({
+        id: products.id,
+        variantId: productVariants.id,
+        name: products.name,
+        sku: productVariants.sku,
+        variantSize: productVariants.size,
+        variantColor: productVariants.color,
+        currentStock: productVariants.currentStock,
+        variantLowStockThreshold: productVariants.lowStockThreshold,
+        productLowStockThreshold: products.lowStockThreshold,
+      })
+      .from(productVariants)
+      .innerJoin(products, eq(productVariants.productId, products.id))
+      .where(eq(productVariants.isActive, true))
+      .all()
+      .map((row) => ({
+        id: row.id,
+        variantId: row.variantId,
+        name: row.name,
+        sku: row.sku,
+        variantLabel: formatVariantLabel(row.variantSize || null, row.variantColor || null),
+        currentStock: row.currentStock,
+        lowStockThreshold: row.variantLowStockThreshold ?? row.productLowStockThreshold,
+      }))
+      .filter((row) => row.currentStock <= row.lowStockThreshold)
+      .sort((a, b) => a.currentStock - b.currentStock || a.name.localeCompare(b.name));
+
     return {
       productCount: activeProducts.length,
       totalStockQuantity: activeProducts.reduce((sum, product) => sum + product.currentStock, 0),
@@ -103,16 +136,7 @@ export function getDashboardSummary(databasePath?: string, now = new Date()): Da
       todaySalesCents,
       currentMonthSalesCents: currentMonthSales.reduce((sum, sale) => sum + sale.totalAmountCents, 0),
       currentMonthProfitCents: currentMonthSales.reduce((sum, sale) => sum + sale.profitAmountCents, 0),
-      lowStockProducts: activeProducts
-        .filter((product) => product.currentStock <= product.lowStockThreshold)
-        .sort((a, b) => a.currentStock - b.currentStock || a.name.localeCompare(b.name))
-        .map((product) => ({
-          id: product.id,
-          name: product.name,
-          sku: product.sku,
-          currentStock: product.currentStock,
-          lowStockThreshold: product.lowStockThreshold,
-        })),
+      lowStockProducts: lowStockVariants,
       bestSellingProducts: Array.from(bestSellingByProduct.values()).sort(
         (a, b) => b.quantitySold - a.quantitySold || b.totalSalesCents - a.totalSalesCents || a.name.localeCompare(b.name),
       ),

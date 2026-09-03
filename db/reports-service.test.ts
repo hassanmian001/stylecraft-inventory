@@ -51,15 +51,15 @@ describe("reports service", () => {
       supplierId: supplier.id,
       purchaseDate: new Date(2026, 6, 9, 9),
       items: [
-        { productId: shirt.id, quantity: 4, unitCostCents: 1_000 },
-        { productId: pants.id, quantity: 2, unitCostCents: 2_000 },
+        { variantId: shirt.variants[0].id, quantity: 4, unitCostCents: 1_000 },
+        { variantId: pants.variants[0].id, quantity: 2, unitCostCents: 2_000 },
       ],
       notes: "Included purchase",
     });
     createPurchase(databasePath, {
       supplierId: supplier.id,
       purchaseDate: new Date(2026, 5, 30, 9),
-      items: [{ productId: shirt.id, quantity: 1, unitCostCents: 1_000 }],
+      items: [{ variantId: shirt.variants[0].id, quantity: 1, unitCostCents: 1_000 }],
       notes: "Old purchase",
     });
     createSale(databasePath, {
@@ -68,14 +68,14 @@ describe("reports service", () => {
       paymentMethod: "Cash",
       notes: "Included sale",
       items: [
-        { productId: shirt.id, quantity: 2, unitPriceCents: 1_500, discountAmountCents: 100 },
-        { productId: pants.id, quantity: 1, unitPriceCents: 3_000 },
+        { variantId: shirt.variants[0].id, quantity: 2, unitPriceCents: 1_500, discountAmountCents: 100 },
+        { variantId: pants.variants[0].id, quantity: 1, unitPriceCents: 3_000 },
       ],
     });
     createSale(databasePath, {
       customerId: customer.id,
       saleDate: new Date(2026, 5, 30, 10),
-      items: [{ productId: shirt.id, quantity: 1, unitPriceCents: 1_500 }],
+      items: [{ variantId: shirt.variants[0].id, quantity: 1, unitPriceCents: 1_500 }],
     });
 
     const reports = getReports(databasePath, { startDate: "2026-07-01", endDate: "2026-07-31" });

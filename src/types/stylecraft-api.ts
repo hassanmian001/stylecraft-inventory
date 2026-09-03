@@ -1,12 +1,25 @@
+export type ProductVariantInput = {
+  id?: number | null;
+  size?: string | null;
+  color?: string | null;
+  sku: string;
+  purchasePriceCents?: number | null;
+  sellingPriceCents?: number | null;
+  currentStock: number;
+  lowStockThreshold?: number | null;
+  isActive: boolean;
+};
+
 export type ProductInput = {
   name: string;
   sku: string;
   categoryName?: string | null;
   purchasePriceCents: number;
   sellingPriceCents: number;
-  currentStock: number;
+  currentStock?: number;
   lowStockThreshold: number;
   isActive: boolean;
+  variants?: ProductVariantInput[];
 };
 
 export type ProductListFilters = {
@@ -14,6 +27,24 @@ export type ProductListFilters = {
   categoryName?: string | null;
   isLowStock?: boolean;
   isActive?: boolean;
+};
+
+export type ProductVariantDto = {
+  id: number;
+  productId: number;
+  size: string | null;
+  color: string | null;
+  label: string;
+  sku: string;
+  purchasePriceCents: number;
+  sellingPriceCents: number;
+  purchasePriceOverrideCents: number | null;
+  sellingPriceOverrideCents: number | null;
+  currentStock: number;
+  lowStockThreshold: number;
+  lowStockThresholdOverride: number | null;
+  isActive: boolean;
+  isLowStock: boolean;
 };
 
 export type ProductDto = {
@@ -27,12 +58,15 @@ export type ProductDto = {
   lowStockThreshold: number;
   isActive: boolean;
   isLowStock: boolean;
+  hasVariants: boolean;
+  variants: ProductVariantDto[];
   createdAt: Date;
   updatedAt: Date;
 };
 
 export type ProductApi = {
   list(filters?: ProductListFilters): Promise<ProductDto[]>;
+  get(id: number): Promise<ProductDto>;
   create(input: ProductInput): Promise<ProductDto>;
   update(id: number, input: ProductInput): Promise<ProductDto>;
   markInactive(id: number): Promise<ProductDto>;
@@ -83,7 +117,7 @@ export type SupplierDto = SupplierInput & {
 };
 
 export type PurchaseItemInput = {
-  productId: number;
+  variantId: number;
   quantity: number;
   unitCostCents: number;
 };
@@ -92,6 +126,7 @@ export type PurchaseInput = {
   supplierId?: number | null;
   supplierName?: string | null;
   purchaseDate: Date | string;
+  amountPaidCents?: number;
   notes?: string | null;
   items: PurchaseItemInput[];
 };
@@ -99,8 +134,11 @@ export type PurchaseInput = {
 export type PurchaseItemDto = {
   id: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
+  variantSku: string | null;
   quantity: number;
   unitCostCents: number;
   totalCostCents: number;
@@ -112,6 +150,8 @@ export type PurchaseDetailDto = {
   supplierName: string | null;
   purchaseDate: Date;
   totalAmountCents: number;
+  amountPaidCents: number;
+  balanceDueCents: number;
   notes: string | null;
   items: PurchaseItemDto[];
   createdAt: Date;
@@ -124,6 +164,8 @@ export type PurchaseHistoryDto = {
   supplierName: string | null;
   purchaseDate: Date;
   totalAmountCents: number;
+  amountPaidCents: number;
+  balanceDueCents: number;
   notes: string | null;
   itemCount: number;
   createdAt: Date;
@@ -179,7 +221,7 @@ export type ContactsApi = {
 };
 
 export type SaleItemInput = {
-  productId: number;
+  variantId: number;
   quantity: number;
   unitPriceCents: number;
   discountAmountCents?: number;
@@ -189,6 +231,7 @@ export type SaleInput = {
   customerId?: number | null;
   customerName?: string | null;
   saleDate: Date | string;
+  amountPaidCents?: number;
   paymentMethod?: string | null;
   notes?: string | null;
   items: SaleItemInput[];
@@ -197,8 +240,11 @@ export type SaleInput = {
 export type SaleItemDto = {
   id: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
+  variantSku: string | null;
   quantity: number;
   unitPriceCents: number;
   unitCostCents: number;
@@ -217,6 +263,8 @@ export type SaleDetailDto = {
   discountAmountCents: number;
   totalAmountCents: number;
   profitAmountCents: number;
+  amountPaidCents: number;
+  balanceDueCents: number;
   paymentMethod: string | null;
   notes: string | null;
   items: SaleItemDto[];
@@ -230,15 +278,19 @@ export type SaleHistoryDto = Omit<SaleDetailDto, "items"> & {
 
 export type SalesApi = {
   list(): Promise<SaleHistoryDto[]>;
+  get(id: number): Promise<SaleDetailDto>;
   create(input: SaleInput): Promise<SaleDetailDto>;
+  update(id: number, input: SaleInput, password: string, actorName?: string | null): Promise<SaleDetailDto>;
   listCustomers(): Promise<CustomerDto[]>;
   createCustomer(input: CustomerInput): Promise<CustomerDto>;
 };
 
 export type DashboardLowStockProductDto = {
   id: number;
+  variantId: number;
   name: string;
   sku: string;
+  variantLabel: string;
   currentStock: number;
   lowStockThreshold: number;
 };
@@ -307,8 +359,10 @@ export type ProfitReportRowDto = {
 
 export type StockReportRowDto = {
   productId: number;
+  variantId: number;
   name: string;
   sku: string;
+  variantLabel: string;
   categoryName: string | null;
   currentStock: number;
   lowStockThreshold: number;
@@ -367,8 +421,10 @@ export type PurchaseReturnInput = {
 export type SaleReturnableItemDto = {
   saleItemId: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
   soldQuantity: number;
   returnedQuantity: number;
   returnableQuantity: number;
@@ -390,8 +446,10 @@ export type SaleReturnCandidateDto = {
 export type PurchaseReturnableItemDto = {
   purchaseItemId: number;
   productId: number;
+  variantId: number | null;
   productName: string;
   productSku: string;
+  variantLabel: string;
   purchasedQuantity: number;
   returnedQuantity: number;
   returnableQuantity: number;
@@ -452,6 +510,7 @@ export type InvoiceBusinessSettingsDto = {
 export type InvoiceLineItemDto = {
   id: number;
   productId: number;
+  variantLabel: string;
   productName: string;
   productSku: string;
   quantity: number;
@@ -521,7 +580,7 @@ export type SettingsApi = {
 };
 
 export type StockAdjustmentInput = {
-  productId: number;
+  variantId: number;
   newStock: number;
   reason: string;
   actorName?: string | null;
@@ -529,8 +588,11 @@ export type StockAdjustmentInput = {
 
 export type StockAdjustmentDto = {
   productId: number;
+  variantId: number;
   productName: string;
   productSku: string;
+  variantLabel: string;
+  variantSku: string;
   stockBefore: number;
   stockAfter: number;
   quantityChange: number;
@@ -553,17 +615,92 @@ export type UpdateApi = {
   check(): Promise<UpdateCheckResult>;
 };
 
+export type LedgerPartyType = "customer" | "supplier";
+
+export type PaymentInput = {
+  partyType: LedgerPartyType;
+  partyId: number;
+  amountCents: number;
+  paymentDate: Date | string;
+  method?: string | null;
+  notes?: string | null;
+};
+
+export type PaymentDto = {
+  id: number;
+  partyType: LedgerPartyType;
+  partyId: number;
+  direction: "in" | "out";
+  amountCents: number;
+  paymentDate: Date;
+  method: string | null;
+  notes: string | null;
+  saleId: number | null;
+  purchaseId: number | null;
+};
+
+export type LedgerEntryDto = {
+  date: Date;
+  kind: "sale" | "purchase" | "payment" | "sale_return" | "purchase_return";
+  reference: string;
+  description: string;
+  debitCents: number;
+  creditCents: number;
+  balanceCents: number;
+};
+
+export type LedgerPartySummaryDto = {
+  partyType: LedgerPartyType;
+  partyId: number;
+  partyName: string;
+  phone: string | null;
+  invoicedCents: number;
+  paidCents: number;
+  returnedCents: number;
+  balanceCents: number;
+};
+
+export type LedgerStatementDto = LedgerPartySummaryDto & {
+  entries: LedgerEntryDto[];
+};
+
+export type LedgerSummaryDto = {
+  customers: LedgerPartySummaryDto[];
+  suppliers: LedgerPartySummaryDto[];
+  customerReceivableCents: number;
+  supplierPayableCents: number;
+};
+
+export type LedgerApi = {
+  getSummary(): Promise<LedgerSummaryDto>;
+  getStatement(partyType: LedgerPartyType, partyId: number): Promise<LedgerStatementDto>;
+  recordPayment(input: PaymentInput): Promise<PaymentDto>;
+  deletePayment(id: number): Promise<void>;
+};
+
+export type EditPasswordStatusDto = {
+  isSet: boolean;
+};
+
+export type SecurityApi = {
+  getEditPasswordStatus(): Promise<EditPasswordStatusDto>;
+  setEditPassword(newPassword: string, currentPassword?: string | null): Promise<EditPasswordStatusDto>;
+  clearEditPassword(currentPassword: string): Promise<EditPasswordStatusDto>;
+  verifyEditPassword(password: string): Promise<boolean>;
+};
 export type StyleCraftApi = {
   audit: AuditApi;
   backup: BackupApi;
   contacts: ContactsApi;
   dashboard: DashboardApi;
   invoices: InvoiceApi;
+  ledger: LedgerApi;
   products: ProductApi;
   purchases: PurchaseApi;
   reports: ReportsApi;
   returns: ReturnsApi;
   sales: SalesApi;
+  security: SecurityApi;
   settings: SettingsApi;
   stock: StockApi;
   update: UpdateApi;

@@ -14,6 +14,24 @@ export function registerProductHandlers(ipcMain: IpcMain) {
     return listProducts(getDatabasePath(), filters);
   });
 
+  ipcMain.handle(productChannels.get, async (_event, id: number) => {
+    const [{ getDatabasePath }, { getProduct }] = await Promise.all([
+      import("../db/paths.js"),
+      import("../db/products-service.js"),
+    ]);
+
+    return getProduct(getDatabasePath(), id);
+  });
+
+  ipcMain.handle(productChannels.get, async (_event, id: number) => {
+    const [{ getDatabasePath }, { getProduct }] = await Promise.all([
+      import("../db/paths.js"),
+      import("../db/products-service.js"),
+    ]);
+
+    return getProduct(getDatabasePath(), id);
+  });
+
   ipcMain.handle(productChannels.create, async (_event, input: ProductInput) => {
     const [{ getDatabasePath }, { createProduct }] = await Promise.all([
       import("../db/paths.js"),

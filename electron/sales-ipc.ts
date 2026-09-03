@@ -17,6 +17,27 @@ export function registerSalesHandlers(ipcMain: IpcMain) {
     return createSale(getDatabasePath(), input);
   });
 
+  ipcMain.handle(salesChannels.get, async (_event, id: number) => {
+    const [{ getDatabasePath }, { getSale }] = await Promise.all([import("../db/paths.js"), import("../db/sales-service.js")]);
+
+    return getSale(getDatabasePath(), id);
+  });
+
+  // Editing a recorded sale is gated on the shop's edit password. The check runs
+  // here in the main process so the renderer can never skip it.
+  ipcMain.handle(salesChannels.update, async (_event, id: number, input: SaleInput, password: string, actorName?: string | null) => {
+    const [{ getDatabasePath }, { assertEditPassword }, { updateSale }] = await Promise.all([
+      import("../db/paths.js"),
+      import("../db/edit-password-service.js"),
+      import("../db/sales-service.js"),
+    ]);
+    const databasePath = getDatabasePath();
+
+    assertEditPassword(databasePath, password);
+
+    return updateSale(databasePath, id, input, actorName);
+  });
+
   ipcMain.handle(salesChannels.listCustomers, async () => {
     const [{ getDatabasePath }, { listCustomers }] = await Promise.all([import("../db/paths.js"), import("../db/sales-service.js")]);
 

@@ -43,6 +43,37 @@ export const products = sqliteTable(
   }),
 );
 
+// One row per size/colour combination of a product. Stock lives here, not on
+// the product: a product's current_stock is a rollup of its variants. Price and
+// low-stock columns are nullable and fall back to the product's own values, so a
+// shop only fills them in when one size costs more than the rest.
+//
+// size and colour default to "" rather than NULL because SQLite treats NULLs as
+// distinct in unique indexes, which would let the same combination be added twice.
+export const productVariants = sqliteTable(
+  "product_variants",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    productId: integer("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    size: text("size").notNull().default(""),
+    color: text("color").notNull().default(""),
+    sku: text("sku").notNull(),
+    purchasePriceCents: integer("purchase_price_cents"),
+    sellingPriceCents: integer("selling_price_cents"),
+    currentStock: integer("current_stock").notNull().default(0),
+    lowStockThreshold: integer("low_stock_threshold"),
+    isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+    ...timestamps,
+  },
+  (table) => ({
+    skuIdx: uniqueIndex("product_variants_sku_unique").on(table.sku),
+    productIdx: index("product_variants_product_id_idx").on(table.productId),
+    comboIdx: uniqueIndex("product_variants_combo_unique").on(table.productId, table.size, table.color),
+  }),
+);
+
 export const suppliers = sqliteTable("suppliers", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
@@ -68,6 +99,7 @@ export const purchases = sqliteTable("purchases", {
   supplierId: integer("supplier_id").references(() => suppliers.id, { onDelete: "set null" }),
   purchaseDate: integer("purchase_date", { mode: "timestamp_ms" }).notNull(),
   totalAmountCents: integer("total_amount_cents").notNull().default(0),
+  amountPaidCents: integer("amount_paid_cents").notNull().default(0),
   notes: text("notes"),
   ...timestamps,
 });
@@ -80,6 +112,7 @@ export const purchaseItems = sqliteTable("purchase_items", {
   productId: integer("product_id")
     .notNull()
     .references(() => products.id, { onDelete: "restrict" }),
+  variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "restrict" }),
   quantity: integer("quantity").notNull(),
   unitCostCents: integer("unit_cost_cents").notNull(),
   totalCostCents: integer("total_cost_cents").notNull(),
@@ -99,6 +132,7 @@ export const sales = sqliteTable(
     discountAmountCents: integer("discount_amount_cents").notNull().default(0),
     totalAmountCents: integer("total_amount_cents").notNull().default(0),
     profitAmountCents: integer("profit_amount_cents").notNull().default(0),
+    amountPaidCents: integer("amount_paid_cents").notNull().default(0),
     paymentMethod: text("payment_method"),
     notes: text("notes"),
     ...timestamps,
@@ -116,6 +150,7 @@ export const saleItems = sqliteTable("sale_items", {
   productId: integer("product_id")
     .notNull()
     .references(() => products.id, { onDelete: "restrict" }),
+  variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "restrict" }),
   quantity: integer("quantity").notNull(),
   unitPriceCents: integer("unit_price_cents").notNull(),
   unitCostCents: integer("unit_cost_cents").notNull(),
@@ -149,6 +184,7 @@ export const saleReturnItems = sqliteTable("sale_return_items", {
   productId: integer("product_id")
     .notNull()
     .references(() => products.id, { onDelete: "restrict" }),
+  variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "restrict" }),
   quantity: integer("quantity").notNull(),
   unitPriceCents: integer("unit_price_cents").notNull(),
   discountAmountCents: integer("discount_amount_cents").notNull().default(0),
@@ -181,6 +217,7 @@ export const purchaseReturnItems = sqliteTable("purchase_return_items", {
   productId: integer("product_id")
     .notNull()
     .references(() => products.id, { onDelete: "restrict" }),
+  variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "restrict" }),
   quantity: integer("quantity").notNull(),
   unitCostCents: integer("unit_cost_cents").notNull(),
   totalCostCents: integer("total_cost_cents").notNull(),
@@ -196,6 +233,7 @@ export const stockMovements = sqliteTable(
     productId: integer("product_id")
       .notNull()
       .references(() => products.id, { onDelete: "restrict" }),
+    variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "restrict" }),
     movementType: text("movement_type", { enum: ["purchase", "sale", "adjustment", "return"] }).notNull(),
     referenceType: text("reference_type").notNull(),
     referenceId: integer("reference_id"),
@@ -209,6 +247,31 @@ export const stockMovements = sqliteTable(
   },
   (table) => ({
     productIdx: index("stock_movements_product_id_idx").on(table.productId),
+  }),
+);
+
+// Money moving between the shop and a customer or supplier, outside of the sale
+// or purchase itself. A ledger balance is the party's invoices minus their
+// payments minus their returns, so an amount paid up front is recorded here too
+// (linked back through saleId / purchaseId) rather than only on the invoice.
+export const payments = sqliteTable(
+  "payments",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    partyType: text("party_type", { enum: ["customer", "supplier"] }).notNull(),
+    partyId: integer("party_id").notNull(),
+    direction: text("direction", { enum: ["in", "out"] }).notNull(),
+    amountCents: integer("amount_cents").notNull(),
+    paymentDate: integer("payment_date", { mode: "timestamp_ms" }).notNull(),
+    method: text("method"),
+    notes: text("notes"),
+    saleId: integer("sale_id").references(() => sales.id, { onDelete: "cascade" }),
+    purchaseId: integer("purchase_id").references(() => purchases.id, { onDelete: "cascade" }),
+    ...timestamps,
+  },
+  (table) => ({
+    partyIdx: index("payments_party_idx").on(table.partyType, table.partyId),
+    dateIdx: index("payments_payment_date_idx").on(table.paymentDate),
   }),
 );
 
@@ -243,6 +306,8 @@ export const schemaTableNames = [
   "audit_logs",
   "categories",
   "customers",
+  "payments",
+  "product_variants",
   "products",
   "purchase_items",
   "purchase_return_items",
