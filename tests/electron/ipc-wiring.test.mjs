@@ -32,6 +32,39 @@ test("every channel the preload invokes has a handler registered", () => {
   assert.deepEqual(missing, [], `channels with no ipcMain.handle: ${missing.join(", ")}`);
 });
 
+/**
+ * Electron throws on the second ipcMain.handle for a channel, and that rejection
+ * happens during startup where nothing surfaces it — the app just comes up with
+ * handlers missing. A repeated registration is always a mistake, so fail on it.
+ */
+test("no channel is registered twice", () => {
+  const duplicates = [];
+
+  for (const name of fs.readdirSync(electronDir).filter((entry) => entry.endsWith("-ipc.ts"))) {
+    const source = fs.readFileSync(path.join(electronDir, name), "utf8");
+    const registered = [...source.matchAll(/ipcMain\.handle\((\w+\.\w+)/g)].map(([, channel]) => channel);
+    const seen = new Set();
+
+    for (const channel of registered) {
+      if (seen.has(channel)) {
+        duplicates.push(`${name}: ${channel}`);
+      }
+
+      seen.add(channel);
+    }
+  }
+
+  assert.deepEqual(duplicates, [], `channels registered more than once: ${duplicates.join(", ")}`);
+});
+
+test("channel names are unique across every group", () => {
+  const channelsSource = fs.readFileSync(path.join(electronDir, "ipc-channels.ts"), "utf8");
+  const names = [...channelsSource.matchAll(/"([a-z]+:[A-Za-z]+)"/g)].map(([, name]) => name);
+  const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
+
+  assert.deepEqual(duplicates, [], `duplicate wire names in ipc-channels.ts: ${duplicates.join(", ")}`);
+});
+
 test("preload channel names match ipc-channels.ts", () => {
   const preloadSource = fs.readFileSync(preloadPath, "utf8");
   const channelsSource = fs.readFileSync(path.join(electronDir, "ipc-channels.ts"), "utf8");

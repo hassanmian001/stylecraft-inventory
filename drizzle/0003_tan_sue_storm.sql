@@ -52,3 +52,18 @@ UPDATE `sale_return_items` SET `variant_id` = (SELECT `v`.`id` FROM `product_var
 UPDATE `stock_movements` SET `variant_id` = (SELECT `v`.`id` FROM `product_variants` `v` WHERE `v`.`product_id` = `stock_movements`.`product_id` ORDER BY `v`.`id` LIMIT 1) WHERE `variant_id` IS NULL;--> statement-breakpoint
 UPDATE `sales` SET `amount_paid_cents` = `total_amount_cents`;--> statement-breakpoint
 UPDATE `purchases` SET `amount_paid_cents` = `total_amount_cents`;
+--> statement-breakpoint
+INSERT INTO `payments` (`party_type`, `party_id`, `direction`, `amount_cents`, `payment_date`, `method`, `notes`, `sale_id`)
+SELECT 'customer', `s`.`customer_id`, 'in',
+       `s`.`total_amount_cents` - coalesce((SELECT sum(`r`.`total_amount_cents`) FROM `sale_returns` `r` WHERE `r`.`sale_id` = `s`.`id`), 0),
+       `s`.`sale_date`, `s`.`payment_method`, 'Paid with sale', `s`.`id`
+FROM `sales` `s`
+WHERE `s`.`customer_id` IS NOT NULL
+  AND `s`.`total_amount_cents` - coalesce((SELECT sum(`r`.`total_amount_cents`) FROM `sale_returns` `r` WHERE `r`.`sale_id` = `s`.`id`), 0) > 0;--> statement-breakpoint
+INSERT INTO `payments` (`party_type`, `party_id`, `direction`, `amount_cents`, `payment_date`, `method`, `notes`, `purchase_id`)
+SELECT 'supplier', `p`.`supplier_id`, 'out',
+       `p`.`total_amount_cents` - coalesce((SELECT sum(`r`.`total_amount_cents`) FROM `purchase_returns` `r` WHERE `r`.`purchase_id` = `p`.`id`), 0),
+       `p`.`purchase_date`, NULL, 'Paid with purchase', `p`.`id`
+FROM `purchases` `p`
+WHERE `p`.`supplier_id` IS NOT NULL
+  AND `p`.`total_amount_cents` - coalesce((SELECT sum(`r`.`total_amount_cents`) FROM `purchase_returns` `r` WHERE `r`.`purchase_id` = `p`.`id`), 0) > 0;
