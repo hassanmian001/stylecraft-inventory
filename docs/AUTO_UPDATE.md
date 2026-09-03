@@ -50,17 +50,19 @@ Iske baad terminal band kar ke naya kholein.
 ## Har naye update par (yahi routine hai)
 
 ```bash
-# 1. version barhayein (0.1.3 -> 0.1.4)
-npm version patch --no-git-tag-version
+# 1. version barhayein -- ye khud commit aur git tag (v0.1.5) bhi bana deta hai
+npm version patch -m "Release v%s"
 
-# 2. build + publish
+# 2. commit + tag GitHub par bhejein
+#    TAG PEHLE JANA ZAROORI HAI, warna publish is error par fail ho jata hai:
+#    "Published releases must have a valid tag"
+git push && git push --tags
+
+# 3. build + publish
 npm run release
-
-# 3. commit + push
-git add -A
-git commit -m "Release v0.1.4"
-git push
 ```
+
+`npm version` chalane se pehle working tree clean hona chahiye (sab kuch commit ho).
 
 `npm run release` khud hi:
 - renderer + electron build karta hai,
