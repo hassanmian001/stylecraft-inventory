@@ -19,7 +19,7 @@
     "verify:package:native": "node scripts/verify-packaged-sqlite.cjs",
     "package:dir": "npm run build && npm run rebuild:native:electron && electron-builder --dir --config.npmRebuild=false && npm run verify:package:native && npm run rebuild:native:node",
     "package:win": "npm run build && npm run rebuild:native:electron && electron-builder --win nsis --config.npmRebuild=false && npm run verify:package:native && npm run rebuild:native:node",
-    "release": "npm run build && npm run rebuild:native:electron && electron-builder --win nsis --config.npmRebuild=false --publish always && npm run verify:package:native && npm run rebuild:native:node",
+    "release": "npm run build && npm run rebuild:native:electron && node scripts/ensure-github-release.cjs && electron-builder --win nsis --config.npmRebuild=false --publish always && npm run verify:package:native && npm run rebuild:native:node",
     "preview": "npm run build && electron .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx db/migrate.ts",

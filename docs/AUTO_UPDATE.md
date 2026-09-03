@@ -67,6 +67,10 @@ npm run release
 `npm run release` khud hi:
 - renderer + electron build karta hai,
 - `better-sqlite3` ko Electron ke liye rebuild karta hai,
+- GitHub par release pehle se bana deta hai (`scripts/ensure-github-release.cjs`) --
+  ye zaroori hai kyunki electron-builder exe aur blockmap ke liye alag-alag
+  publisher chalata hai, aur dono ek saath release banane ki koshish karein to
+  ya to 422 error aata hai ya do duplicate releases ban jati hain,
 - NSIS installer banata hai,
 - installer + `latest.yml` + `.blockmap` GitHub Release par upload karta hai,
 - packaged sqlite verify karta hai, phir native module wapas Node ke liye rebuild kar deta hai.
@@ -78,8 +82,11 @@ Bas. Jitne PCs par app lagi hai, wo agle 1 ghante ke andar khud update ho jayeng
 Auto-update sirf **0.1.4 aur uske baad** ke versions ke liye kaam karega, kyunki
 purane 0.1.3 installer mein updater code nahi tha. Isliye:
 
-1. `npm run release` se **0.1.4** publish karein.
-2. Us 0.1.4 ka installer ek dafa manually har PC par chala dein.
+1. 0.1.4 publish ho chuki hai:
+   <https://github.com/hassanmian001/stylecraft-inventory/releases/latest>
+2. Wahan se `StyleCraft-Inventory-Setup-0.1.4.exe` download kar ke har PC par
+   ek dafa manually chala dein (purani 0.1.3 ke upar hi install ho jayegi,
+   data safe rehta hai).
 3. Uske baad sab automatic.
 
 ## Troubleshooting
@@ -88,6 +95,8 @@ purane 0.1.3 installer mein updater code nahi tha. Isliye:
   Release ke assets mein `latest.yml` hona zaroori hai.
 - **Version wahi rehta hai:** `package.json` ka `version` barhana bhool gaye.
   electron-updater sirf zyada version par update karta hai.
+- **Ek hi tag par do releases ban gayin:** purani wali (jis mein `latest.yml` nahi)
+  GitHub par delete kar dein. `scripts/ensure-github-release.cjs` ab ye hone se rokta hai.
 - **Errors dekhne hain:** installed app ko command prompt se
   `"StyleCraft Inventory.exe" --enable-logging` chala kar dekhein --
   updater ki errors console par `[updater]` prefix ke saath aati hain.
