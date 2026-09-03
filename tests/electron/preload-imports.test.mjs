@@ -21,11 +21,13 @@ test("preload is CommonJS and exposes every StyleCraft API group", () => {
   assert.match(preloadSource, /backup:/);
   assert.match(preloadSource, /contacts:/);
   assert.match(preloadSource, /dashboard:/);
+  assert.match(preloadSource, /ledger:/);
   assert.match(preloadSource, /products:/);
   assert.match(preloadSource, /purchases:/);
   assert.match(preloadSource, /reports:/);
   assert.match(preloadSource, /returns:/);
   assert.match(preloadSource, /sales:/);
+  assert.match(preloadSource, /security:/);
   assert.match(preloadSource, /settings:/);
   assert.match(preloadSource, /stock:/);
   assert.doesNotMatch(preloadSource, /import /);

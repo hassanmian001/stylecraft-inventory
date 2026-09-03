@@ -6,12 +6,13 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import SettingsScreen from "./SettingsScreen";
-import type { BackupApi, DashboardApi, InvoiceApi, ProductApi, PurchaseApi, ReportsApi, SalesApi, SettingsApi, UpdateApi } from "@/types/stylecraft-api";
+import type { BackupApi, DashboardApi, InvoiceApi, ProductApi, PurchaseApi, ReportsApi, SalesApi, SecurityApi, SettingsApi, UpdateApi } from "@/types/stylecraft-api";
 
 describe("SettingsScreen", () => {
   let backupApi: BackupApi;
   let settingsApi: SettingsApi;
   let updateApi: UpdateApi;
+  let securityApi: SecurityApi;
 
   afterEach(() => {
     cleanup();
@@ -44,6 +45,12 @@ describe("SettingsScreen", () => {
     updateApi = {
       check: vi.fn().mockResolvedValue({ status: "up-to-date", currentVersion: "0.1.4" }),
     };
+    securityApi = {
+      getEditPasswordStatus: vi.fn().mockResolvedValue({ isSet: false }),
+      setEditPassword: vi.fn().mockResolvedValue({ isSet: true }),
+      clearEditPassword: vi.fn().mockResolvedValue({ isSet: false }),
+      verifyEditPassword: vi.fn().mockResolvedValue(true),
+    };
 
     window.stylecraft = {
       backup: backupApi,
@@ -54,6 +61,8 @@ describe("SettingsScreen", () => {
       reports: { getReports: vi.fn().mockResolvedValue({}) } as unknown as ReportsApi,
       sales: { list: vi.fn().mockResolvedValue([]), create: vi.fn().mockResolvedValue({}), listCustomers: vi.fn().mockResolvedValue([]), createCustomer: vi.fn().mockResolvedValue({}) } as unknown as SalesApi,
       settings: settingsApi,
+      ledger: {} as never,
+      security: securityApi,
       update: updateApi,
     };
   });

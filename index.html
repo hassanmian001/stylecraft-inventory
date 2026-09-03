@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StyleCraft Inventory</title>
+    <script>
+      // Applied before the first paint so a dark-mode user never sees a white flash.
+      try {
+        var stored = window.localStorage.getItem("stylecraft.theme");
+        var dark = stored === "dark" || (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+        document.documentElement.style.colorScheme = dark ? "dark" : "light";
+      } catch (error) {
+        /* Storage may be blocked; the app still applies the theme once it mounts. */
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

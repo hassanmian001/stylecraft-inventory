@@ -20,6 +20,26 @@ const sampleProducts: ProductDto[] = [
     lowStockThreshold: 5,
     isActive: true,
     isLowStock: true,
+    hasVariants: false,
+    variants: [
+      {
+        id: 11,
+        productId: 1,
+        size: null,
+        color: null,
+        label: "Standard",
+        sku: "OX-001",
+        purchasePriceCents: 1250,
+        sellingPriceCents: 2499,
+        purchasePriceOverrideCents: null,
+        sellingPriceOverrideCents: null,
+        currentStock: 3,
+        lowStockThreshold: 5,
+        lowStockThresholdOverride: null,
+        isActive: true,
+        isLowStock: true,
+      },
+    ],
     createdAt: new Date("2026-01-01T00:00:00.000Z"),
     updatedAt: new Date("2026-01-01T00:00:00.000Z"),
   },
@@ -34,6 +54,26 @@ const sampleProducts: ProductDto[] = [
     lowStockThreshold: 4,
     isActive: true,
     isLowStock: false,
+    hasVariants: false,
+    variants: [
+      {
+        id: 21,
+        productId: 2,
+        size: null,
+        color: null,
+        label: "Standard",
+        sku: "DJ-010",
+        purchasePriceCents: 3500,
+        sellingPriceCents: 6299,
+        purchasePriceOverrideCents: null,
+        sellingPriceOverrideCents: null,
+        currentStock: 12,
+        lowStockThreshold: 4,
+        lowStockThresholdOverride: null,
+        isActive: true,
+        isLowStock: false,
+      },
+    ],
     createdAt: new Date("2026-01-02T00:00:00.000Z"),
     updatedAt: new Date("2026-01-02T00:00:00.000Z"),
   },
@@ -103,7 +143,7 @@ describe("PurchasesScreen", () => {
     backupApi = { getSettings: vi.fn(), updateLocation: vi.fn(), create: vi.fn(), restore: vi.fn(), chooseDirectory: vi.fn(), chooseFile: vi.fn() } as unknown as BackupApi;
     invoicesApi = { getBySaleId: vi.fn().mockResolvedValue({}) } as unknown as InvoiceApi;
 
-    window.stylecraft = { backup: backupApi, dashboard: dashboardApi, invoices: invoicesApi, products: productsApi, purchases: purchasesApi, reports: reportsApi, sales: salesApi, settings: {} as never, update: {} as never };
+    window.stylecraft = { backup: backupApi, dashboard: dashboardApi, invoices: invoicesApi, products: productsApi, purchases: purchasesApi, reports: reportsApi, sales: salesApi, ledger: {} as never, security: {} as never, settings: {} as never, update: {} as never };
   });
 
   it("renders products, suppliers, and purchase history", async () => {
@@ -142,9 +182,10 @@ describe("PurchasesScreen", () => {
         supplierName: null,
         purchaseDate: "2026-07-10",
         notes: "Weekly restock",
+        amountPaidCents: 12150,
         items: [
-          { productId: 1, quantity: 4, unitCostCents: 1250 },
-          { productId: 2, quantity: 2, unitCostCents: 3575 },
+          { variantId: 11, quantity: 4, unitCostCents: 1250 },
+          { variantId: 21, quantity: 2, unitCostCents: 3575 },
         ],
       });
     });

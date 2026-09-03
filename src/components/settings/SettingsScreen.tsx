@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { styleCraftEmail, styleCraftPhone } from "@/lib/branding";
-import type { BackupResultDto, BackupSettingsDto, BusinessSettingsDto, RestoreResultDto, UpdateCheckResult } from "@/types/stylecraft-api";
+import { useTheme } from "@/lib/use-theme";
+import type { BackupResultDto, BackupSettingsDto, BusinessSettingsDto, EditPasswordStatusDto, RestoreResultDto, ThemePreference, UpdateCheckResult } from "@/types/stylecraft-api";
 
 const defaultBusinessForm: BusinessSettingsDto = {
   businessName: "StyleCraft",
@@ -45,19 +46,27 @@ export default function SettingsScreen() {
   const [error, setError] = useState<string | null>(null);
   const [updateCheckResult, setUpdateCheckResult] = useState<UpdateCheckResult | null>(null);
   const [isCheckingForUpdate, setIsCheckingForUpdate] = useState(false);
+  const [editPasswordStatus, setEditPasswordStatus] = useState<EditPasswordStatusDto>({ isSet: false });
+  const [currentEditPassword, setCurrentEditPassword] = useState("");
+  const [newEditPassword, setNewEditPassword] = useState("");
+  const [editPasswordNotice, setEditPasswordNotice] = useState<string | null>(null);
+  const [editPasswordError, setEditPasswordError] = useState<string | null>(null);
+  const { preference: themePreference, setPreference: setThemePreference } = useTheme();
 
   async function loadSettings() {
     setIsLoading(true);
     setError(null);
 
     try {
-      const [loadedBackupSettings, loadedBusinessSettings] = await Promise.all([
+      const [loadedBackupSettings, loadedBusinessSettings, loadedEditPasswordStatus] = await Promise.all([
         window.stylecraft.backup.getSettings(),
         window.stylecraft.settings.getBusinessSettings(),
+        window.stylecraft.security.getEditPasswordStatus(),
       ]);
 
       setBackupSettings(loadedBackupSettings);
       setBusinessSettings(loadedBusinessSettings);
+      setEditPasswordStatus(loadedEditPasswordStatus);
       setBusinessForm(loadedBusinessSettings);
       setBackupLocation(loadedBackupSettings.backupLocation);
     } catch (caughtError) {
@@ -119,6 +128,35 @@ export default function SettingsScreen() {
 
   function updateBusinessForm(changes: Partial<BusinessSettingsDto>) {
     setBusinessForm((current) => ({ ...current, ...changes }));
+  }
+
+  async function handleSaveEditPassword(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setEditPasswordError(null);
+    setEditPasswordNotice(null);
+
+    try {
+      setEditPasswordStatus(await window.stylecraft.security.setEditPassword(newEditPassword, editPasswordStatus.isSet ? currentEditPassword : null));
+      setCurrentEditPassword("");
+      setNewEditPassword("");
+      setEditPasswordNotice("Edit password saved. Changing a recorded sale now asks for it.");
+    } catch (caughtError) {
+      setEditPasswordError(caughtError instanceof Error ? caughtError.message : "Could not save the edit password.");
+    }
+  }
+
+  async function handleClearEditPassword() {
+    setEditPasswordError(null);
+    setEditPasswordNotice(null);
+
+    try {
+      setEditPasswordStatus(await window.stylecraft.security.clearEditPassword(currentEditPassword));
+      setCurrentEditPassword("");
+      setNewEditPassword("");
+      setEditPasswordNotice("Edit password removed. Recorded sales can now be changed without one.");
+    } catch (caughtError) {
+      setEditPasswordError(caughtError instanceof Error ? caughtError.message : "Could not remove the edit password.");
+    }
   }
 
   async function handleCheckForUpdates() {
@@ -185,23 +223,86 @@ export default function SettingsScreen() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">Milestone 9 backup and restore</p>
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Milestone 9 backup and restore</p>
           <h2 className="mt-1 text-3xl font-bold tracking-tight">Settings</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">Choose where database backups are saved, create manual backups, and restore from a saved SQLite backup file.</p>
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">Choose where database backups are saved, create manual backups, and restore from a saved SQLite backup file.</p>
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+        <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
           {error}
         </div>
       ) : null}
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
+        <h3 className="font-semibold text-slate-950 dark:text-slate-50">Appearance</h3>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Dark mode is easier on the eyes in a dim shop. &quot;Match Windows&quot; follows the system setting.</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {(["light", "dark", "system"] as ThemePreference[]).map((option) => (
+            <Button
+              key={option}
+              onClick={() => setThemePreference(option)}
+              size="sm"
+              type="button"
+              variant={themePreference === option ? "default" : "ghost"}
+            >
+              {option === "light" ? "Light" : option === "dark" ? "Dark" : "Match Windows"}
+            </Button>
+          ))}
+        </div>
+      </section>
+
+      <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm" noValidate onSubmit={handleSaveEditPassword}>
+        <div>
+          <h3 className="font-semibold text-slate-950 dark:text-slate-50">Sale edit password</h3>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {editPasswordStatus.isSet
+              ? "A password is set. Changing a recorded sale asks for it first."
+              : "No password is set, so anyone using this computer can change a recorded sale."}
+          </p>
+        </div>
+
+        {editPasswordError ? (
+          <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
+            {editPasswordError}
+          </div>
+        ) : null}
+
+        {editPasswordNotice ? (
+          <div className="rounded-2xl border border-green-200 dark:border-green-800/60 bg-green-50 dark:bg-green-950/30 px-4 py-3 text-sm text-green-800 dark:text-green-200" role="status">
+            {editPasswordNotice}
+          </div>
+        ) : null}
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {editPasswordStatus.isSet ? (
+            <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="current-edit-password">
+              Current password
+              <input className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50" id="current-edit-password" onChange={(event) => setCurrentEditPassword(event.target.value)} type="password" value={currentEditPassword} />
+            </label>
+          ) : null}
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="new-edit-password">
+            {editPasswordStatus.isSet ? "New password" : "Password"}
+            <input className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50" id="new-edit-password" onChange={(event) => setNewEditPassword(event.target.value)} type="password" value={newEditPassword} />
+          </label>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button type="submit">{editPasswordStatus.isSet ? "Change password" : "Set password"}</Button>
+          {editPasswordStatus.isSet ? (
+            <Button onClick={handleClearEditPassword} type="button" variant="ghost">
+              Remove password
+            </Button>
+          ) : null}
+        </div>
+      </form>
+
+      <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div>
-            <h3 className="font-semibold text-slate-950">Software updates</h3>
-            <p className="mt-1 text-sm text-slate-500">The app checks for updates automatically. Use this if you don't want to wait.</p>
+            <h3 className="font-semibold text-slate-950 dark:text-slate-50">Software updates</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">The app checks for updates automatically. Use this if you don't want to wait.</p>
           </div>
           <Button disabled={isCheckingForUpdate} onClick={handleCheckForUpdates} type="button" variant="ghost">
             {isCheckingForUpdate ? "Checking..." : "Check for updates"}
@@ -211,8 +312,8 @@ export default function SettingsScreen() {
           <div
             className={`mt-4 rounded-2xl border px-4 py-3 text-sm ${
               updateCheckResult.status === "error"
-                ? "border-red-200 bg-red-50 text-red-700"
-                : "border-green-200 bg-green-50 text-green-800"
+                ? "border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300"
+                : "border-green-200 dark:border-green-800/60 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-200"
             }`}
             role="status"
           >
@@ -222,65 +323,65 @@ export default function SettingsScreen() {
       </section>
 
       {isLoading || backupSettings === null || businessSettings === null ? (
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">Loading settings...</div>
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-5 text-sm text-slate-500 dark:text-slate-400">Loading settings...</div>
       ) : (
         <>
-          <form className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" noValidate onSubmit={handleSaveBusinessSettings}>
+          <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4" noValidate onSubmit={handleSaveBusinessSettings}>
             <div>
-              <h3 className="font-semibold text-slate-950">Business profile</h3>
-              <p className="mt-1 text-sm text-slate-500">These details appear on invoices and printable documents.</p>
+              <h3 className="font-semibold text-slate-950 dark:text-slate-50">Business profile</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">These details appear on invoices and printable documents.</p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="business-name">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="business-name">
                 Business name
                 <input
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="business-name"
                   onChange={(event) => updateBusinessForm({ businessName: event.target.value })}
                   value={businessForm.businessName}
                 />
               </label>
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="business-phone">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="business-phone">
                 Phone
                 <input
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="business-phone"
                   onChange={(event) => updateBusinessForm({ phone: event.target.value })}
                   value={businessForm.phone ?? ""}
                 />
               </label>
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="business-email">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="business-email">
                 Email
                 <input
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="business-email"
                   onChange={(event) => updateBusinessForm({ email: event.target.value })}
                   value={businessForm.email ?? ""}
                 />
               </label>
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="currency-symbol">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="currency-symbol">
                 Currency symbol
                 <input
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="currency-symbol"
                   onChange={(event) => updateBusinessForm({ currencySymbol: event.target.value })}
                   value={businessForm.currencySymbol}
                 />
               </label>
-              <label className="grid gap-1 text-sm font-medium text-slate-700 md:col-span-2" htmlFor="business-address">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200 md:col-span-2" htmlFor="business-address">
                 Address
                 <textarea
-                  className="min-h-20 rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="min-h-20 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="business-address"
                   onChange={(event) => updateBusinessForm({ address: event.target.value })}
                   value={businessForm.address ?? ""}
                 />
               </label>
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="invoice-prefix">
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="invoice-prefix">
                 Invoice prefix
                 <input
-                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id="invoice-prefix"
                   onChange={(event) => updateBusinessForm({ invoicePrefix: event.target.value })}
                   value={businessForm.invoicePrefix}
@@ -295,17 +396,17 @@ export default function SettingsScreen() {
             </div>
           </form>
 
-          <form className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" noValidate onSubmit={handleSaveLocation}>
+          <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4" noValidate onSubmit={handleSaveLocation}>
             <div>
-              <h3 className="font-semibold text-slate-950">Backup location</h3>
-              <p className="mt-1 text-sm text-slate-500">Current location: {backupSettings.backupLocation}</p>
-              <p className="mt-1 text-xs text-slate-500">{backupSettings.isDefaultLocation ? "Using the default local backup folder." : "Using a saved custom backup folder."}</p>
+              <h3 className="font-semibold text-slate-950 dark:text-slate-50">Backup location</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Current location: {backupSettings.backupLocation}</p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{backupSettings.isDefaultLocation ? "Using the default local backup folder." : "Using a saved custom backup folder."}</p>
             </div>
 
-            <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="backup-location">
+            <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="backup-location">
               Backup folder
               <input
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 id="backup-location"
                 onChange={(event) => setBackupLocation(event.target.value)}
                 value={backupLocation}
@@ -322,33 +423,33 @@ export default function SettingsScreen() {
             </div>
           </form>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm">
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div>
-                <h3 className="font-semibold text-slate-950">Create manual backup</h3>
-                <p className="mt-1 text-sm text-slate-500">Backup filenames include date and time, and existing backup files are not overwritten.</p>
+                <h3 className="font-semibold text-slate-950 dark:text-slate-50">Create manual backup</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Backup filenames include date and time, and existing backup files are not overwritten.</p>
               </div>
               <Button disabled={isWorking} onClick={handleCreateBackup} type="button">
                 Create backup
               </Button>
             </div>
             {lastBackup ? (
-              <div className="mt-4 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">
+              <div className="mt-4 rounded-2xl border border-green-200 dark:border-green-800/60 bg-green-50 dark:bg-green-950/30 px-4 py-3 text-sm text-green-800 dark:text-green-200" role="status">
                 Backup created at {formatDateTime(lastBackup.createdAt)}: {lastBackup.backupPath}
               </div>
             ) : null}
           </section>
 
-          <form className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" noValidate onSubmit={handleRestore}>
+          <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 shadow-sm" noValidate onSubmit={handleRestore}>
             <div>
-              <h3 className="font-semibold text-slate-950">Restore from backup</h3>
-              <p className="mt-1 text-sm text-slate-500">Restoring replaces the active local database with the selected backup file.</p>
+              <h3 className="font-semibold text-slate-950 dark:text-slate-50">Restore from backup</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Restoring replaces the active local database with the selected backup file.</p>
             </div>
 
-            <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="restore-path">
+            <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="restore-path">
               Backup file
               <input
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 id="restore-path"
                 onChange={(event) => setRestorePath(event.target.value)}
                 value={restorePath}
@@ -365,7 +466,7 @@ export default function SettingsScreen() {
             </div>
 
             {lastRestore ? (
-              <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">
+              <div className="rounded-2xl border border-green-200 dark:border-green-800/60 bg-green-50 dark:bg-green-950/30 px-4 py-3 text-sm text-green-800 dark:text-green-200" role="status">
                 Database restored at {formatDateTime(lastRestore.restoredAt)} from {lastRestore.restoredFrom}.
               </div>
             ) : null}

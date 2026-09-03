@@ -1,6 +1,6 @@
-export type SectionId = "dashboard" | "products" | "contacts" | "purchases" | "sales" | "returns" | "reports" | "settings";
+export type SectionId = "dashboard" | "products" | "contacts" | "purchases" | "sales" | "returns" | "ledger" | "reports" | "settings";
 
-export type IconName = "dashboard" | "products" | "contacts" | "purchases" | "sales" | "returns" | "reports" | "settings" | "chart" | "stock";
+export type IconName = "dashboard" | "products" | "contacts" | "purchases" | "sales" | "returns" | "ledger" | "reports" | "settings" | "chart" | "stock";
 
 export type Section = {
   id: SectionId;
@@ -51,6 +51,12 @@ export const sections: Section[] = [
     label: "Returns",
     description: "Sales and purchase returns will adjust stock and preserve transaction history.",
     icon: "returns",
+  },
+  {
+    id: "ledger",
+    label: "Ledger",
+    description: "Customer and supplier khata: who owes what, and every payment against it.",
+    icon: "ledger",
   },
   {
     id: "reports",
@@ -167,6 +173,23 @@ export const moduleCards: Record<SectionId, ModuleCard[]> = {
       title: "Audit trail",
       description: "Every return creates stock movement and audit records for traceability.",
       icon: "reports",
+    },
+  ],
+  ledger: [
+    {
+      title: "Customer khata",
+      description: "Outstanding balance per customer with a running statement.",
+      icon: "ledger",
+    },
+    {
+      title: "Supplier khata",
+      description: "What the shop still owes each supplier.",
+      icon: "ledger",
+    },
+    {
+      title: "Payments",
+      description: "Record money received or paid against an outstanding balance.",
+      icon: "ledger",
     },
   ],
   reports: [

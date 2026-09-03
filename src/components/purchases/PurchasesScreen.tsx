@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { findVariant, VariantPicker } from "@/components/products/VariantPicker";
 import { formatCurrency } from "@/lib/currency";
 import type { ProductDto, PurchaseHistoryDto, PurchaseInput, SupplierDto } from "@/types/stylecraft-api";
 
 type ItemFormState = {
   rowId: number;
   productId: string;
+  variantId: string;
   quantity: string;
   unitCost: string;
 };
@@ -15,6 +17,7 @@ type PurchaseFormState = {
   supplierId: string;
   supplierName: string;
   purchaseDate: string;
+  amountPaid: string;
   notes: string;
   items: ItemFormState[];
 };
@@ -24,7 +27,7 @@ function todayInputValue() {
 }
 
 function makeItem(rowId: number): ItemFormState {
-  return { rowId, productId: "", quantity: "1", unitCost: "0.00" };
+  return { rowId, productId: "", variantId: "", quantity: "1", unitCost: "0.00" };
 }
 
 function makeEmptyForm(): PurchaseFormState {
@@ -32,6 +35,7 @@ function makeEmptyForm(): PurchaseFormState {
     supplierId: "",
     supplierName: "",
     purchaseDate: todayInputValue(),
+    amountPaid: "",
     notes: "",
     items: [makeItem(1)],
   };
@@ -67,16 +71,16 @@ function buildPurchaseInput(form: PurchaseFormState): { input?: PurchaseInput; e
     return { error: "Purchase date is required." };
   }
 
-  const seenProductIds = new Set<number>();
+  const seenVariantIds = new Set<number>();
   const items = [];
 
   for (const item of form.items) {
-    const productId = Number(item.productId);
+    const variantId = Number(item.variantId);
     const quantity = Number(item.quantity);
     const unitCostCents = decimalStringToCents(item.unitCost);
 
-    if (!Number.isInteger(productId) || productId <= 0) {
-      return { error: "Select a product for every purchase item." };
+    if (!Number.isInteger(variantId) || variantId <= 0) {
+      return { error: "Select a size/colour for every purchase item." };
     }
 
     if (!Number.isInteger(quantity) || quantity <= 0) {
@@ -87,12 +91,31 @@ function buildPurchaseInput(form: PurchaseFormState): { input?: PurchaseInput; e
       return { error: "Unit cost must be a valid zero or positive amount." };
     }
 
-    if (seenProductIds.has(productId)) {
-      return { error: "Each product can appear only once per purchase." };
+    if (seenVariantIds.has(variantId)) {
+      return { error: "Each size/colour can appear only once per purchase." };
     }
 
-    seenProductIds.add(productId);
-    items.push({ productId, quantity, unitCostCents });
+    seenVariantIds.add(variantId);
+    items.push({ variantId, quantity, unitCostCents });
+  }
+
+  const totalAmountCents = items.reduce((sum, item) => sum + item.quantity * item.unitCostCents, 0);
+  let amountPaidCents = totalAmountCents;
+
+  if (form.amountPaid.trim()) {
+    amountPaidCents = decimalStringToCents(form.amountPaid);
+
+    if (!Number.isInteger(amountPaidCents) || amountPaidCents < 0) {
+      return { error: "Amount paid must be a valid zero or positive amount." };
+    }
+
+    if (amountPaidCents > totalAmountCents) {
+      return { error: "Amount paid cannot be more than the purchase total." };
+    }
+  }
+
+  if (amountPaidCents < totalAmountCents && !form.supplierId && !form.supplierName.trim()) {
+    return { error: "Choose a supplier before leaving part of a purchase unpaid, so the balance has a khata to sit on." };
   }
 
   return {
@@ -100,6 +123,7 @@ function buildPurchaseInput(form: PurchaseFormState): { input?: PurchaseInput; e
       supplierId: form.supplierId ? Number(form.supplierId) : null,
       supplierName: form.supplierName.trim() || null,
       purchaseDate: form.purchaseDate,
+      amountPaidCents,
       notes: form.notes.trim() || null,
       items,
     },
@@ -147,6 +171,22 @@ export default function PurchasesScreen() {
     }));
   }
 
+  function selectProduct(rowId: number, productId: string) {
+    const product = products.find((entry) => String(entry.id) === productId);
+    const only = product?.variants.filter((variant) => variant.isActive) ?? [];
+
+    // A product with one size needs no second choice, so pick it automatically.
+    const variantId = only.length === 1 ? String(only[0].id) : "";
+
+    updateItem(rowId, { productId, variantId, unitCost: only.length === 1 ? (only[0].purchasePriceCents / 100).toFixed(2) : "0.00" });
+  }
+
+  function selectVariant(rowId: number, variantId: string) {
+    const found = findVariant(products, Number(variantId));
+
+    updateItem(rowId, { variantId, unitCost: found ? (found.variant.purchasePriceCents / 100).toFixed(2) : "0.00" });
+  }
+
   function addItem() {
     setForm((current) => ({ ...current, items: [...current.items, makeItem(nextRowId)] }));
     setNextRowId((current) => current + 1);
@@ -189,39 +229,39 @@ export default function PurchasesScreen() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">Milestone 4 purchases module</p>
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Milestone 4 purchases module</p>
           <h2 className="mt-1 text-3xl font-bold tracking-tight">Purchases</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
             Record supplier purchases, increase stock transactionally, and keep purchase history available.
           </p>
         </div>
-        <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
+        <div className="rounded-2xl bg-blue-50 dark:bg-blue-950/40 px-4 py-3 text-sm text-blue-700">
           <span className="font-semibold">{purchases.length}</span> purchases in history
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+        <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
           {error}
         </div>
       ) : null}
 
-      <form className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" noValidate onSubmit={handleSubmit}>
+      <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4" noValidate onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div>
-            <h3 className="font-semibold text-slate-950">Create purchase</h3>
-            <p className="mt-1 text-sm text-slate-500">Each saved item increases stock and records a stock movement.</p>
+            <h3 className="font-semibold text-slate-950 dark:text-slate-50">Create purchase</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Each saved item increases stock and records a stock movement.</p>
           </div>
-          <div className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm">
+          <div className="rounded-xl bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-950 dark:text-slate-50 shadow-sm">
             Total {formatCurrency(totalCents)}
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="purchase-supplier">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="purchase-supplier">
             Supplier
             <select
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="purchase-supplier"
               onChange={(event) => setForm((current) => ({ ...current, supplierId: event.target.value }))}
               value={form.supplierId}
@@ -235,10 +275,10 @@ export default function PurchasesScreen() {
             </select>
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="purchase-new-supplier">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="purchase-new-supplier">
             New supplier name
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="purchase-new-supplier"
               onChange={(event) => setForm((current) => ({ ...current, supplierName: event.target.value }))}
               placeholder="Optional"
@@ -246,10 +286,10 @@ export default function PurchasesScreen() {
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="purchase-date">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="purchase-date">
             Purchase date
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="purchase-date"
               onChange={(event) => setForm((current) => ({ ...current, purchaseDate: event.target.value }))}
               type="date"
@@ -258,10 +298,27 @@ export default function PurchasesScreen() {
           </label>
         </div>
 
-        <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="purchase-notes">
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="purchase-amount-paid">
+          Amount paid now
+          <input
+            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
+            id="purchase-amount-paid"
+            min="0"
+            onChange={(event) => setForm((current) => ({ ...current, amountPaid: event.target.value }))}
+            placeholder={`Leave blank for paid in full (${formatCurrency(totalCents)})`}
+            step="0.01"
+            type="number"
+            value={form.amountPaid}
+          />
+          <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+            {form.amountPaid.trim() ? `Balance owed to supplier ${formatCurrency(Math.max(totalCents - decimalStringToCents(form.amountPaid), 0))}` : "Nothing will be left owing."}
+          </span>
+        </label>
+
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="purchase-notes">
           Notes
           <textarea
-            className="min-h-20 rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="min-h-20 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             id="purchase-notes"
             onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
             value={form.notes}
@@ -270,35 +327,28 @@ export default function PurchasesScreen() {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <h4 className="font-semibold text-slate-950">Items</h4>
+            <h4 className="font-semibold text-slate-950 dark:text-slate-50">Items</h4>
             <Button onClick={addItem} type="button" variant="ghost">
               Add item
             </Button>
           </div>
 
           {form.items.map((item, index) => (
-            <div className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-[minmax(0,1fr)_120px_140px_120px_auto]" key={item.rowId}>
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor={`purchase-product-${item.rowId}`}>
-                Product {index + 1}
-                <select
-                  className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  id={`purchase-product-${item.rowId}`}
-                  onChange={(event) => updateItem(item.rowId, { productId: event.target.value })}
-                  value={item.productId}
-                >
-                  <option value="">Select product</option>
-                  {products.map((product) => (
-                    <option key={product.id} value={product.id}>
-                      {product.name} ({product.sku}) - stock {product.currentStock}
-                    </option>
-                  ))}
-                </select>
-              </label>
+            <div className="grid gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_110px_130px_120px_auto]" key={item.rowId}>
+              <VariantPicker
+                idPrefix={`purchase-${item.rowId}`}
+                label={`Product ${index + 1}`}
+                onProductChange={(productId) => selectProduct(item.rowId, productId)}
+                onVariantChange={(variantId) => selectVariant(item.rowId, variantId)}
+                productId={item.productId}
+                products={products}
+                variantId={item.variantId}
+              />
 
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor={`purchase-quantity-${item.rowId}`}>
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor={`purchase-quantity-${item.rowId}`}>
                 Quantity
                 <input
-                  className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id={`purchase-quantity-${item.rowId}`}
                   min="1"
                   onChange={(event) => updateItem(item.rowId, { quantity: event.target.value })}
@@ -308,10 +358,10 @@ export default function PurchasesScreen() {
                 />
               </label>
 
-              <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor={`purchase-unit-cost-${item.rowId}`}>
+              <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor={`purchase-unit-cost-${item.rowId}`}>
                 Unit cost
                 <input
-                  className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   id={`purchase-unit-cost-${item.rowId}`}
                   min="0"
                   onChange={(event) => updateItem(item.rowId, { unitCost: event.target.value })}
@@ -321,9 +371,9 @@ export default function PurchasesScreen() {
                 />
               </label>
 
-              <div className="grid gap-1 text-sm font-medium text-slate-700">
+              <div className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200">
                 Line total
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-950">{formatCurrency(lineTotalCents(item))}</div>
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-3 py-2 text-slate-950 dark:text-slate-50">{formatCurrency(lineTotalCents(item))}</div>
               </div>
 
               <div className="flex items-end">
@@ -344,42 +394,48 @@ export default function PurchasesScreen() {
         </div>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
-        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-          <h3 className="font-semibold text-slate-950">Purchase history</h3>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
+          <h3 className="font-semibold text-slate-950 dark:text-slate-50">Purchase history</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-left text-sm">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3 font-semibold">Date</th>
                 <th className="px-4 py-3 font-semibold">Supplier</th>
                 <th className="px-4 py-3 font-semibold">Items</th>
                 <th className="px-4 py-3 font-semibold">Total</th>
+                <th className="px-4 py-3 font-semibold">Paid</th>
+                <th className="px-4 py-3 font-semibold">Balance</th>
                 <th className="px-4 py-3 font-semibold">Notes</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
               {isLoading ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={5}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={7}>
                     Loading purchases...
                   </td>
                 </tr>
               ) : purchases.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={5}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={7}>
                     No purchases recorded yet.
                   </td>
                 </tr>
               ) : (
                 purchases.map((purchase) => (
                   <tr key={purchase.id}>
-                    <td className="px-4 py-4 text-slate-600">{formatDate(purchase.purchaseDate)}</td>
-                    <td className="px-4 py-4 font-medium text-slate-950">{purchase.supplierName ?? "No supplier"}</td>
-                    <td className="px-4 py-4 text-slate-600">{purchase.itemCount}</td>
-                    <td className="px-4 py-4 font-semibold text-slate-950">{formatCurrency(purchase.totalAmountCents)}</td>
-                    <td className="px-4 py-4 text-slate-600">{purchase.notes ?? "-"}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{formatDate(purchase.purchaseDate)}</td>
+                    <td className="px-4 py-4 font-medium text-slate-950 dark:text-slate-50">{purchase.supplierName ?? "No supplier"}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{purchase.itemCount}</td>
+                    <td className="px-4 py-4 font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(purchase.totalAmountCents)}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{formatCurrency(purchase.amountPaidCents)}</td>
+                    <td className={`px-4 py-4 font-medium ${purchase.balanceDueCents > 0 ? "text-red-600 dark:text-red-400" : "text-slate-600 dark:text-slate-300"}`}>
+                      {formatCurrency(purchase.balanceDueCents)}
+                    </td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{purchase.notes ?? "-"}</td>
                   </tr>
                 ))
               )}

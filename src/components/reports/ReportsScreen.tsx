@@ -84,9 +84,10 @@ function getTableReport(type: ReportType, reports: ReportsDto): TableReport {
 
   return {
     title: "Stock Report",
-    columns: ["Product", "SKU", "Category", "Stock", "Low-stock threshold", "Purchase", "Selling", "Inventory value", "Low stock", "Status"],
+    columns: ["Product", "Size / colour", "SKU", "Category", "Stock", "Low-stock threshold", "Purchase", "Selling", "Inventory value", "Low stock", "Status"],
     rows: reports.stockRows.map((row) => [
       row.name,
+      row.variantLabel,
       row.sku,
       row.categoryName ?? "Uncategorized",
       row.currentStock,
@@ -155,7 +156,7 @@ function totalsForReport(type: ReportType, reports: ReportsDto) {
   return [
     { label: "Stock quantity", value: String(reports.totals.stockQuantity) },
     { label: "Inventory value", value: formatCurrency(reports.totals.inventoryValueCents) },
-    { label: "Products", value: String(reports.stockRows.length) },
+    { label: "Stock lines", value: String(reports.stockRows.length) },
   ];
 }
 
@@ -216,33 +217,33 @@ export default function ReportsScreen() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">Milestone 7 reports and exports</p>
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Milestone 7 reports and exports</p>
           <h2 className="mt-1 text-3xl font-bold tracking-tight">Reports</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">Review sales, purchases, profit, and current stock with exportable tables.</p>
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">Review sales, purchases, profit, and current stock with exportable tables.</p>
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+        <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
           {error}
         </div>
       ) : null}
 
-      <div className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-[1fr_1fr_auto]">
-        <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="reports-start-date">
+      <div className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4 md:grid-cols-[1fr_1fr_auto]">
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="reports-start-date">
           Start date
           <input
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             id="reports-start-date"
             onChange={(event) => setStartDate(event.target.value)}
             type="date"
             value={startDate}
           />
         </label>
-        <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="reports-end-date">
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="reports-end-date">
           End date
           <input
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             id="reports-end-date"
             onChange={(event) => setEndDate(event.target.value)}
             type="date"
@@ -272,23 +273,23 @@ export default function ReportsScreen() {
       </div>
 
       {isLoading || reports === null || tableReport === null ? (
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-500">Loading reports...</div>
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-5 text-sm text-slate-500 dark:text-slate-400">Loading reports...</div>
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-3">
             {totalsForReport(activeReport, reports).map((total) => (
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" key={total.label}>
-                <div className="text-sm font-medium text-slate-500">{total.label}</div>
-                <div className="mt-2 text-2xl font-bold text-slate-950">{total.value}</div>
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm" key={total.label}>
+                <div className="text-sm font-medium text-slate-500 dark:text-slate-400">{total.label}</div>
+                <div className="mt-2 text-2xl font-bold text-slate-950 dark:text-slate-50">{total.value}</div>
               </div>
             ))}
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-slate-200">
-            <div className="flex flex-col gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 md:flex-row md:items-center md:justify-between">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+            <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-4 py-3 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                <h3 className="font-semibold text-slate-950">{tableReport.title}</h3>
+                <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                <h3 className="font-semibold text-slate-950 dark:text-slate-50">{tableReport.title}</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button onClick={handleCsvExport} size="sm" type="button" variant="ghost">
@@ -302,8 +303,8 @@ export default function ReportsScreen() {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-                <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-left text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   <tr>
                     {tableReport.columns.map((column) => (
                       <th className="px-4 py-3 font-semibold" key={column}>
@@ -312,10 +313,10 @@ export default function ReportsScreen() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
                   {tableReport.rows.length === 0 ? (
                     <tr>
-                      <td className="px-4 py-5 text-slate-500" colSpan={tableReport.columns.length}>
+                      <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={tableReport.columns.length}>
                         No rows match these filters.
                       </td>
                     </tr>
@@ -323,7 +324,7 @@ export default function ReportsScreen() {
                     tableReport.rows.map((row, rowIndex) => (
                       <tr key={rowIndex}>
                         {row.map((value, columnIndex) => (
-                          <td className="px-4 py-4 text-slate-600" key={`${rowIndex}-${columnIndex}`}>
+                          <td className="px-4 py-4 text-slate-600 dark:text-slate-300" key={`${rowIndex}-${columnIndex}`}>
                             {value}
                           </td>
                         ))}

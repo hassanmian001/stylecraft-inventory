@@ -678,6 +678,8 @@ export type LedgerApi = {
   deletePayment(id: number): Promise<void>;
 };
 
+export type ThemePreference = "light" | "dark" | "system";
+
 export type EditPasswordStatusDto = {
   isSet: boolean;
 };

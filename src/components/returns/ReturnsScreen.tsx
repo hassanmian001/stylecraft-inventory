@@ -195,19 +195,19 @@ export default function ReturnsScreen() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">Returns workflow</p>
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Returns workflow</p>
           <h2 className="mt-1 text-3xl font-bold tracking-tight">Sales & purchase returns</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
             Process customer returns and supplier returns while keeping original transactions intact.
           </p>
         </div>
-        <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
+        <div className="rounded-2xl bg-blue-50 dark:bg-blue-950/40 px-4 py-3 text-sm text-blue-700">
           <span className="font-semibold">{saleReturns.length}</span> sale returns · <span className="font-semibold">{purchaseReturns.length}</span> purchase returns
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+        <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
           {error}
         </div>
       ) : null}
@@ -221,19 +221,19 @@ export default function ReturnsScreen() {
         </Button>
       </div>
 
-      <form className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" noValidate onSubmit={handleSubmit}>
+      <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4" noValidate onSubmit={handleSubmit}>
         <div>
-          <h3 className="font-semibold text-slate-950">Create {mode === "sales" ? "sales" : "purchase"} return</h3>
-          <p className="mt-1 text-sm text-slate-500">
+          <h3 className="font-semibold text-slate-950 dark:text-slate-50">Create {mode === "sales" ? "sales" : "purchase"} return</h3>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {mode === "sales" ? "Customer returns increase stock." : "Supplier returns decrease stock and cannot exceed available stock."}
           </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-source">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-source">
             {mode === "sales" ? "Sale" : "Purchase"}
             <select
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-source"
               onChange={(event) => selectSource(event.target.value)}
               value={form.sourceId}
@@ -253,10 +253,10 @@ export default function ReturnsScreen() {
             </select>
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-item">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-item">
             Item
             <select
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-item"
               onChange={(event) => setForm((current) => ({ ...current, sourceItemId: event.target.value }))}
               value={form.sourceItemId}
@@ -265,21 +265,21 @@ export default function ReturnsScreen() {
               {mode === "sales"
                 ? activeSaleCandidate?.items.map((item) => (
                     <option key={item.saleItemId} value={item.saleItemId}>
-                      {item.productName} ({item.productSku}) - returnable {item.returnableQuantity}
+                      {item.productName} - {item.variantLabel} ({item.productSku}) - returnable {item.returnableQuantity}
                     </option>
                   ))
                 : activePurchaseCandidate?.items.map((item) => (
                     <option key={item.purchaseItemId} value={item.purchaseItemId}>
-                      {item.productName} ({item.productSku}) - returnable {item.returnableQuantity}, stock {item.currentStock}
+                      {item.productName} - {item.variantLabel} ({item.productSku}) - returnable {item.returnableQuantity}, stock {item.currentStock}
                     </option>
                   ))}
             </select>
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-quantity">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-quantity">
             Quantity
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-quantity"
               max={maxReturnQuantity ?? undefined}
               min="1"
@@ -290,10 +290,10 @@ export default function ReturnsScreen() {
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-date">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-date">
             Return date
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-date"
               onChange={(event) => setForm((current) => ({ ...current, returnDate: event.target.value }))}
               type="date"
@@ -301,10 +301,10 @@ export default function ReturnsScreen() {
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-actor">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-actor">
             Processed by
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-actor"
               onChange={(event) => setForm((current) => ({ ...current, actorName: event.target.value }))}
               placeholder="Optional"
@@ -312,10 +312,10 @@ export default function ReturnsScreen() {
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="return-notes">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="return-notes">
             Notes
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="return-notes"
               onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
               placeholder="Reason or reference"
@@ -331,13 +331,13 @@ export default function ReturnsScreen() {
         </div>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
-        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-          <h3 className="font-semibold text-slate-950">{mode === "sales" ? "Sales return history" : "Purchase return history"}</h3>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
+          <h3 className="font-semibold text-slate-950 dark:text-slate-50">{mode === "sales" ? "Sales return history" : "Purchase return history"}</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-left text-sm">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3 font-semibold">Return</th>
                 <th className="px-4 py-3 font-semibold">Source</th>
@@ -347,39 +347,39 @@ export default function ReturnsScreen() {
                 <th className="px-4 py-3 font-semibold">Notes</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
               {isLoading ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={6}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={6}>
                     Loading returns...
                   </td>
                 </tr>
               ) : activeReturns.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={6}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={6}>
                     No {mode === "sales" ? "sales" : "purchase"} returns recorded yet.
                   </td>
                 </tr>
               ) : mode === "sales" ? (
                 saleReturns.map((saleReturn) => (
                   <tr key={saleReturn.id}>
-                    <td className="px-4 py-4 font-medium text-slate-950">#{saleReturn.id}</td>
-                    <td className="px-4 py-4 text-slate-600">{saleReturn.invoiceNumber}</td>
-                    <td className="px-4 py-4 text-slate-600">{formatDate(saleReturn.returnDate)}</td>
-                    <td className="px-4 py-4 text-slate-600">{saleReturn.itemCount}</td>
-                    <td className="px-4 py-4 font-semibold text-slate-950">{formatCurrency(saleReturn.totalAmountCents)}</td>
-                    <td className="px-4 py-4 text-slate-600">{saleReturn.notes ?? "-"}</td>
+                    <td className="px-4 py-4 font-medium text-slate-950 dark:text-slate-50">#{saleReturn.id}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{saleReturn.invoiceNumber}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{formatDate(saleReturn.returnDate)}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{saleReturn.itemCount}</td>
+                    <td className="px-4 py-4 font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(saleReturn.totalAmountCents)}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{saleReturn.notes ?? "-"}</td>
                   </tr>
                 ))
               ) : (
                 purchaseReturns.map((purchaseReturn) => (
                   <tr key={purchaseReturn.id}>
-                    <td className="px-4 py-4 font-medium text-slate-950">#{purchaseReturn.id}</td>
-                    <td className="px-4 py-4 text-slate-600">Purchase #{purchaseReturn.purchaseId}</td>
-                    <td className="px-4 py-4 text-slate-600">{formatDate(purchaseReturn.returnDate)}</td>
-                    <td className="px-4 py-4 text-slate-600">{purchaseReturn.itemCount}</td>
-                    <td className="px-4 py-4 font-semibold text-slate-950">{formatCurrency(purchaseReturn.totalAmountCents)}</td>
-                    <td className="px-4 py-4 text-slate-600">{purchaseReturn.notes ?? "-"}</td>
+                    <td className="px-4 py-4 font-medium text-slate-950 dark:text-slate-50">#{purchaseReturn.id}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">Purchase #{purchaseReturn.purchaseId}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{formatDate(purchaseReturn.returnDate)}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{purchaseReturn.itemCount}</td>
+                    <td className="px-4 py-4 font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(purchaseReturn.totalAmountCents)}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{purchaseReturn.notes ?? "-"}</td>
                   </tr>
                 ))
               )}

@@ -150,19 +150,19 @@ export default function ContactsScreen() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-sm font-medium text-blue-600">Contact management</p>
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Contact management</p>
           <h2 className="mt-1 text-3xl font-bold tracking-tight">Customers & suppliers</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
             Keep contact details available for repeat sales and supplier purchases without changing transaction history.
           </p>
         </div>
-        <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
+        <div className="rounded-2xl bg-blue-50 dark:bg-blue-950/40 px-4 py-3 text-sm text-blue-700">
           <span className="font-semibold">{customers.length}</span> customers · <span className="font-semibold">{suppliers.length}</span> suppliers
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+        <div className="rounded-2xl border border-red-200 dark:border-red-800/60 bg-red-50 dark:bg-red-950/30 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-300" role="alert">
           {error}
         </div>
       ) : null}
@@ -176,11 +176,11 @@ export default function ContactsScreen() {
         </Button>
       </div>
 
-      <form className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4" noValidate onSubmit={handleSubmit}>
+      <form className="grid gap-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4" noValidate onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div>
-            <h3 className="font-semibold text-slate-950">{editingContact ? `Edit ${activeLabel.toLowerCase()}` : `Add ${activeLabel.toLowerCase()}`}</h3>
-            <p className="mt-1 text-sm text-slate-500">Name is required. Other details are optional.</p>
+            <h3 className="font-semibold text-slate-950 dark:text-slate-50">{editingContact ? `Edit ${activeLabel.toLowerCase()}` : `Add ${activeLabel.toLowerCase()}`}</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Name is required. Other details are optional.</p>
           </div>
           {editingContact ? (
             <Button onClick={resetForm} type="button" variant="ghost">
@@ -190,30 +190,30 @@ export default function ContactsScreen() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-name">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-name">
             Name
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="contact-name"
               onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
               value={form.name}
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-phone">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-phone">
             Phone
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="contact-phone"
               onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
               value={form.phone}
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-email">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-email">
             Email
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="contact-email"
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
               type="email"
@@ -221,10 +221,10 @@ export default function ContactsScreen() {
             />
           </label>
 
-          <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-address">
+          <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-address">
             Address
             <input
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               id="contact-address"
               onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))}
               value={form.address}
@@ -232,10 +232,10 @@ export default function ContactsScreen() {
           </label>
         </div>
 
-        <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-notes">
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-notes">
           Notes
           <textarea
-            className="min-h-20 rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="min-h-20 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             id="contact-notes"
             onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
             value={form.notes}
@@ -250,10 +250,10 @@ export default function ContactsScreen() {
       </form>
 
       <div className="space-y-3">
-        <label className="grid gap-1 text-sm font-medium text-slate-700" htmlFor="contact-search">
+        <label className="grid gap-1 text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="contact-search">
           Search {activeKind}
           <input
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-950 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-950 dark:text-slate-50 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             id="contact-search"
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Name, phone, email, address, or notes"
@@ -262,13 +262,13 @@ export default function ContactsScreen() {
         </label>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
-        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
-          <h3 className="font-semibold text-slate-950">{activeKind === "customers" ? "Customer directory" : "Supplier directory"}</h3>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-4 py-3">
+          <h3 className="font-semibold text-slate-950 dark:text-slate-50">{activeKind === "customers" ? "Customer directory" : "Supplier directory"}</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-left text-sm">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3 font-semibold">Name</th>
                 <th className="px-4 py-3 font-semibold">Phone</th>
@@ -278,27 +278,27 @@ export default function ContactsScreen() {
                 <th className="px-4 py-3 font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
               {isLoading ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={6}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={6}>
                     Loading contacts...
                   </td>
                 </tr>
               ) : filteredContacts.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-5 text-slate-500" colSpan={6}>
+                  <td className="px-4 py-5 text-slate-500 dark:text-slate-400" colSpan={6}>
                     No {activeKind} found.
                   </td>
                 </tr>
               ) : (
                 filteredContacts.map((contact) => (
                   <tr key={contact.id}>
-                    <td className="px-4 py-4 font-medium text-slate-950">{contact.name}</td>
-                    <td className="px-4 py-4 text-slate-600">{contact.phone ?? "-"}</td>
-                    <td className="px-4 py-4 text-slate-600">{contact.email ?? "-"}</td>
-                    <td className="px-4 py-4 text-slate-600">{contact.address ?? "-"}</td>
-                    <td className="px-4 py-4 text-slate-600">{contact.notes ?? "-"}</td>
+                    <td className="px-4 py-4 font-medium text-slate-950 dark:text-slate-50">{contact.name}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{contact.phone ?? "-"}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{contact.email ?? "-"}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{contact.address ?? "-"}</td>
+                    <td className="px-4 py-4 text-slate-600 dark:text-slate-300">{contact.notes ?? "-"}</td>
                     <td className="px-4 py-4">
                       <Button onClick={() => startEditing(contact)} type="button" variant="ghost">
                         Edit

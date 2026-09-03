@@ -14,6 +14,18 @@
     --radius: 0.75rem;
   }
 
+  /* Dark mode is driven by a `dark` class on <html>, set from the saved theme
+     before React mounts so the app never flashes light first. */
+  .dark {
+    --background: 222.2 47.4% 8%;
+    --foreground: 210 40% 96%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --border: 217.2 32.6% 22%;
+  }
+
   * {
     @apply border-border;
   }

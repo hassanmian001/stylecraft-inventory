@@ -27,7 +27,7 @@
     "test": "npm run test:electron && npm run test:renderer && npm run test:db",
     "test:db": "vitest run db/schema.test.ts db/client.test.ts db/paths.test.ts db/verify.test.ts db/products-service.test.ts db/product-variants-service.test.ts db/contacts-service.test.ts db/audit-service.test.ts db/stock-adjustments-service.test.ts db/returns-service.test.ts db/purchases-service.test.ts db/sales-service.test.ts db/dashboard-service.test.ts db/reports-service.test.ts db/invoices-service.test.ts db/backup-service.test.ts db/settings-service.test.ts db/ledger-service.test.ts db/sale-edit-service.test.ts",
     "test:electron": "npm run build:electron && node --test tests/electron/*.test.mjs",
-    "test:renderer": "vitest run vite.config.test.ts src/app-content.test.ts src/components/products/ProductsScreen.test.tsx src/components/contacts/ContactsScreen.test.tsx src/components/purchases/PurchasesScreen.test.tsx src/components/sales/SalesScreen.test.tsx src/components/returns/ReturnsScreen.test.tsx src/components/dashboard/DashboardScreen.test.tsx src/components/reports/ReportsScreen.test.tsx src/components/settings/SettingsScreen.test.tsx"
+    "test:renderer": "vitest run vite.config.test.ts src/app-content.test.ts src/components/products/ProductsScreen.test.tsx src/components/contacts/ContactsScreen.test.tsx src/components/purchases/PurchasesScreen.test.tsx src/components/sales/SalesScreen.test.tsx src/components/returns/ReturnsScreen.test.tsx src/components/dashboard/DashboardScreen.test.tsx src/components/ledger/LedgerScreen.test.tsx src/components/reports/ReportsScreen.test.tsx src/components/settings/SettingsScreen.test.tsx"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
