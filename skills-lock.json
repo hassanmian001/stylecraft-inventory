@@ -1,0 +1,1187 @@
+{
+  "version": 1,
+  "skills": {
+    "algorithmic-art": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/algorithmic-art/SKILL.md",
+      "computedHash": "987b24aa98171a0d3690420173b2cdb6eaafd57981ed716b5d50371affa82ea3"
+    },
+    "anthropic": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/sdks/anthropic/SKILL.md",
+      "computedHash": "ed277a28d9a5a897780881a653bc56435a56218e2039b4df30e50be1f22c1b63"
+    },
+    "api-design-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/web/api-design-patterns/SKILL.md",
+      "computedHash": "477372fcf2e949cba3808aaa4500988e54e7991c9410ced003c6ce49c1d46a38"
+    },
+    "api-documentation": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/web/api-documentation/SKILL.md",
+      "computedHash": "25e9d676473498e24e8053a2f860230e412cf06243dcb233b1cc21119cca399c"
+    },
+    "api-review": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/security/api-review/SKILL.md",
+      "computedHash": "67e13b81dec69e93d7f87dcae29ae3a039d6573cf8798060c613781241c3d129"
+    },
+    "artifacts-builder": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/main/artifacts-builder/SKILL.md",
+      "computedHash": "3bee3e28f3e85142a2f15291a82ee71c307d4ac3d6cb6d8b8f454ed27d7161da"
+    },
+    "asyncio": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/async/asyncio/SKILL.md",
+      "computedHash": "a9c6aa9e52c1bd6d047c382a28c945e02c42cdbbfed92bd558336119eb623f50"
+    },
+    "axum": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/frameworks/axum/SKILL.md",
+      "computedHash": "e6e1606edb309841d2e30ec52412210462b996684d502fe7a3f7170b8578ed16"
+    },
+    "bad-example-skill": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "examples/bad-interdependent-skill/SKILL.md",
+      "computedHash": "6486256af9b27ee7033a7619c6bd2c7ea7e9fde9a3d735bf5e0e496e57e6a1fc"
+    },
+    "better-auth-authentication": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/auth/better-auth/better-auth-authentication/SKILL.md",
+      "computedHash": "344fc70cb5bcdddbe43bbb04bda23f65c86611575d7918f672b8fa458f41e0df"
+    },
+    "better-auth-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/auth/better-auth/better-auth-core/SKILL.md",
+      "computedHash": "030afec0017d367b033ba7e3039f67730df5529c200fd213da2ce80eb3789f1c"
+    },
+    "better-auth-integrations": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/auth/better-auth/better-auth-integrations/SKILL.md",
+      "computedHash": "9f963194c5722b4279661978abff0f88a68b402bafa48937e3fa08b4f21cffbd"
+    },
+    "better-auth-plugins": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/auth/better-auth/better-auth-plugins/SKILL.md",
+      "computedHash": "ba8413dc44ff9e185fbad9db9d2d43bbace191e10c398efca5eaa670cd74371a"
+    },
+    "biome": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/tooling/biome/SKILL.md",
+      "computedHash": "2d89865ec243a4e5d395554750d083f258486ea85c07767fdb71265c87b1dd3b"
+    },
+    "brainstorming": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/brainstorming/SKILL.md",
+      "computedHash": "52bd31e9007a7fa964b25fca70ce4f8a09dd8c8257c13075cb5a615cc37d3f5b"
+    },
+    "brand-guidelines": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/brand-guidelines/SKILL.md",
+      "computedHash": "c82f0b24cdcc7e2693a963d30c810558b7bb89ed84508b2328228d21256ef865"
+    },
+    "bug-fix": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/verification/bug-fix/SKILL.md",
+      "computedHash": "d64ccefd04bb576679a1283ae38e59670e943441b6f1828dd7fe9ca0f280c082"
+    },
+    "canvas-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/canvas-design/SKILL.md",
+      "computedHash": "4e8bbc31d3b159efdd32d31a63ba8cd5a44d84911e924c1f2c709c50cbcdd0ec"
+    },
+    "cargo-release": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/ops/cargo-release/SKILL.md",
+      "computedHash": "0f03dd2a4f7ea519d6cb1deeaacb02fd6cced9fc8b2487341d530f5c340fbe38"
+    },
+    "celery": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/async/celery/SKILL.md",
+      "computedHash": "00e6aae8ae91e9a050c34801cf63e012ff5b233f95243b67a6ab8682e5ffc0a6"
+    },
+    "clap": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/cli/clap/SKILL.md",
+      "computedHash": "3091f3d7e0a0238a52774eb0a04ab38ccb6b57183e27550987e61036cf26cd3d"
+    },
+    "claude-api": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/claude-api/SKILL.md",
+      "computedHash": "d7848cf69221dc3edce871768ae8dc3914331b4f8af47dd88aa0eedeb29d12c7"
+    },
+    "code-production-process": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/process/code-production-process/SKILL.md",
+      "computedHash": "b32bdd131c56d4d6e497f65fb1ffbd48e78ce604c2dd70894716338bc7c2df25"
+    },
+    "code-quality": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/quality/code-quality/SKILL.md",
+      "computedHash": "a169ad47f193d3da42bd3b814979d621820428803b35598600126b043482dd66"
+    },
+    "code-quality-scoring": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/quality/code-quality-scoring/SKILL.md",
+      "computedHash": "a1cb75741f09825e0b91b4b9bb602f4534addbea196b1fa22f10b94604961004"
+    },
+    "code-review-standards": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/process/code-review-standards/SKILL.md",
+      "computedHash": "1e1ff26f1a36511c0e425581a6addd6f5456e345d6f0124c37be06c475f1151e"
+    },
+    "condition-based-waiting": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/testing/condition-based-waiting/SKILL.md",
+      "computedHash": "0a7be8a2277507e5b9517a528abbde42446454b46b3772656d113bcf60b4f9c2"
+    },
+    "cypress": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/testing/cypress/SKILL.md",
+      "computedHash": "f561949ebaab892d41e76907bb1df7267d44ce3e72b34cf9fdb86abbbe0d04cb"
+    },
+    "daisyui": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ui/components/daisyui/SKILL.md",
+      "computedHash": "0e07eb329b2378d228e27f765d161079ee273b1f813df9fdf02c5680c9b7fee7"
+    },
+    "database-migration": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/data/database-migration/SKILL.md",
+      "computedHash": "81c28aff1265f853687e2afd02151172f71d4ebd382290fe489a834c03f6e823"
+    },
+    "datadog": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/observability/datadog/SKILL.md",
+      "computedHash": "60a23bff82a6a90c3eb1d75b6af971e1ff8715ed388a73494b65706c8d7f5a87"
+    },
+    "dependency-audit": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/dependency/dependency-audit/SKILL.md",
+      "computedHash": "34444cf16ae88dce076726143a9507b8d90a7ac9de86bf807598bc2b770f0553"
+    },
+    "desktop-applications": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/desktop-applications/SKILL.md",
+      "computedHash": "7ad99ba81c2413b79b803c7a474ba5836a956d6931243a315ee385a72a796712"
+    },
+    "digitalocean-agentic-cloud": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-agentic-cloud/SKILL.md",
+      "computedHash": "8fea33feb192224aae394f18c0bbcb7e760d677cd21882f237a3b2c168382b16"
+    },
+    "digitalocean-compute": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-compute/SKILL.md",
+      "computedHash": "b724d9850bb565698c857507ce5047bdfa4533c71d6338976f439455266c4836"
+    },
+    "digitalocean-containers-images": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-containers-images/SKILL.md",
+      "computedHash": "318cd4ff9ba09f3b16e5d9d24abccbcfb72117b9b8984c7f04f2de5533562524"
+    },
+    "digitalocean-managed-databases": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-managed-databases/SKILL.md",
+      "computedHash": "fd70c7f394366662e03ad10bfc6321ff502b5848998826de0dd7869c226b1bd4"
+    },
+    "digitalocean-management": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-management/SKILL.md",
+      "computedHash": "5e85350af8bc5fcb69958dea604161b7595627c834c50628d5af523bb79c7d86"
+    },
+    "digitalocean-networking": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-networking/SKILL.md",
+      "computedHash": "61c3a204b491b696276c7d0d8062fd0ceec3f07824411cda67c9c94ae55b6940"
+    },
+    "digitalocean-overview": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-overview/SKILL.md",
+      "computedHash": "902b473d3b070bd2333fbf9ba2be7be6608fd3d026ee1abe0a44fb8b965c23ef"
+    },
+    "digitalocean-storage": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-storage/SKILL.md",
+      "computedHash": "d9e0493e1c1c3b9498b303d944ad9dbbab435027b3daba7f975316a081f6a923"
+    },
+    "digitalocean-teams": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/digitalocean-teams/SKILL.md",
+      "computedHash": "962755cb8ce506b32a09974d1f6cad320168a3091b7d4455335785f0b8dc05c4"
+    },
+    "dispatching-parallel-agents": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/dispatching-parallel-agents/SKILL.md",
+      "computedHash": "1001bb4a352ec9ad0fd592816b8762611679f2e825168a54b75c1c6e0541b4bb"
+    },
+    "django": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/frameworks/django/SKILL.md",
+      "computedHash": "8a4a5ddb7fdb5f741e16f14884c85a3c13e195b3a921bb9d2f6ebd1165025858"
+    },
+    "doc-coauthoring": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/doc-coauthoring/SKILL.md",
+      "computedHash": "62cd7744438ee2aecc986c520bb603988a78ff6aaaf70a471bf4584fe0b78dae"
+    },
+    "docker": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/infrastructure/docker/SKILL.md",
+      "computedHash": "cd00ef717c05b3382f65d660c2bf8849152e78e91b017e0720676972726da642"
+    },
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/docx/SKILL.md",
+      "computedHash": "150be87ff7b18f273ad07da303adb1cf2ca21cc3e76db7a2cf0373405178a278"
+    },
+    "drizzle": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/drizzle/SKILL.md",
+      "computedHash": "daefe2ce00404d56ac89ff312abc57457d3779ff5f8a38a1c6b4867c67a86ea4"
+    },
+    "drizzle-migrations": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/drizzle-migrations/SKILL.md",
+      "computedHash": "4544281a83af424b8ca10f5c30d256ac876f6f2591e2a2a9b82c7383d6bd0c0f"
+    },
+    "dspy": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/frameworks/dspy/SKILL.md",
+      "computedHash": "b8d346c7121c0c22ab51d53dd7ef23085062c6247935825cc6870f95c4bbc3f4"
+    },
+    "ecto-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/elixir/data/ecto-patterns/SKILL.md",
+      "computedHash": "cf27b97b55f277a60568b34487e3e31a7454d078d5bc8a64f0e0b264e641301e"
+    },
+    "emergency-release-workflow": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/emergency/emergency-release-workflow/SKILL.md",
+      "computedHash": "7922f8078de9404b4b25183c53d1be0d8f4d443508b90df8fb742ccd88d6ce4f"
+    },
+    "env-manager": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/infrastructure/env-manager/SKILL.md",
+      "computedHash": "6bd08295645142e9dddffe366fe593347cec6aa1a336e39e98fb37e36439cefe"
+    },
+    "espocrm": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/espocrm/SKILL.md",
+      "computedHash": "8ebbfad13e82c6342d43d6e0b8f75c402220cb5039a431b905e64a5a72d7d57d"
+    },
+    "example-framework-skill": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "examples/good-self-contained-skill/SKILL.md",
+      "computedHash": "1dce2368f9ec6003d76784bda59c502a7fa9ef6ec2e056c4f7301c768607500e"
+    },
+    "executing-plans": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/executing-plans/SKILL.md",
+      "computedHash": "08604f93f2e38dd3575e5503c79cda5c623c78a8df0e472457ac5ef7a33f22b8"
+    },
+    "express-production": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/express-production/SKILL.md",
+      "computedHash": "06ebc6ad61ad43626b6f9d0dc7997f3ce0c640c8169ab105a211ad6ec3afeda8"
+    },
+    "fastapi-local-dev": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/frameworks/fastapi-local-dev/SKILL.md",
+      "computedHash": "5a0c5f77711066e854275ecfa1a85867a3948974c9635a9b21fd4f38e7314782"
+    },
+    "fastify": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/frameworks/fastify/SKILL.md",
+      "computedHash": "7d7f1b9f7e6d1a6f81f8a87fc2611fbb219b8297e4d0adfebebb5ce41c24f2de"
+    },
+    "finishing-a-development-branch": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/finishing-a-development-branch/SKILL.md",
+      "computedHash": "aa2632ed96df59c36348bd8f8ec1ff0fb0c5cc68b60691834687bf4cedc6be3f"
+    },
+    "flask": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/frameworks/flask/SKILL.md",
+      "computedHash": "194c22ddb7fcfaee23ba99b295996368b2fcacee2aea094a393ca8e5864a9f5e"
+    },
+    "flexlayout-react": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/flexlayout-react/SKILL.md",
+      "computedHash": "4fe149d94f4469552af15cc64e38d22665bfd3a8561ec5bd8699b9e4beb1b5ea"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
+    },
+    "gh-cli": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/gh-cli/SKILL.md",
+      "computedHash": "72b8aa7472fffda4ac23a46528096e92d8eea12e2ef403117d1c8b06cb5bd348"
+    },
+    "git-workflow": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/git-workflow/SKILL.md",
+      "computedHash": "33c9607794680cd4d0938d0542cba51d78c71c2d16e85f8a592f68d2184e5943"
+    },
+    "git-worktrees": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/git-worktrees/SKILL.md",
+      "computedHash": "6eb123bf3f23767a602729d831c01797ac05e3810f6bbd25c0cd7b332618000c"
+    },
+    "github-actions": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/infrastructure/github-actions/SKILL.md",
+      "computedHash": "f0e55c5a43583424491a1e44ec8f6b69202cac21346d5878c0a335a354221f72"
+    },
+    "golang-cli-cobra-viper": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-cli-cobra-viper/SKILL.md",
+      "computedHash": "a9e5f9d1ecf0b3a6292f6cc9571112d7c60e1ecdf09c01d9ac5e4754b97ef495"
+    },
+    "golang-concurrency-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-concurrency-patterns/SKILL.md",
+      "computedHash": "12cf5391802a94809283d910e1d9896f3087baa975e4f37b9bda01fee574ce08"
+    },
+    "golang-database-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-database-patterns/SKILL.md",
+      "computedHash": "b3b214aa9b53d8f1f7a5e7b4cf6ebedea3d146f394f419e74462e8e92d0caf5a"
+    },
+    "golang-grpc": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-grpc/SKILL.md",
+      "computedHash": "4d4333894825f92f2acb23406121a7b462b99ef9f23893dd3ad0bfc0d8d00df3"
+    },
+    "golang-http-frameworks": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-http-frameworks/SKILL.md",
+      "computedHash": "f77b61ddebdfc1da4557fc66d1cb175e5ee58f75649d20d23162337073a8c754"
+    },
+    "golang-observability-opentelemetry": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-observability-opentelemetry/SKILL.md",
+      "computedHash": "e159366039f0d53df6742c823e1089eecfc67c8c5f62265f32dee9987f4118c6"
+    },
+    "golang-testing-strategies": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/golang/golang-testing-strategies/SKILL.md",
+      "computedHash": "b81dab8a4bc31c9cf91e472b4e8472d72d1200e39af7362a94c5afdee8afef69"
+    },
+    "graphql": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/data/graphql/SKILL.md",
+      "computedHash": "bc3f42a8714e77f184fb2cf7e4306666b9d481f1d45cb8d1980270980b9c9136"
+    },
+    "headlessui": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ui/components/headlessui/SKILL.md",
+      "computedHash": "dda6cb19876c67f5cfad8c7019f250b5d55e931921f3249192748ddc33012abd"
+    },
+    "homebrew-formula-maintenance": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/infrastructure/homebrew-formula-maintenance/SKILL.md",
+      "computedHash": "622e70ccb4905a6c12dd87dfdebf220619f0911cbffd6f70cf9e8aa4705cd7e5"
+    },
+    "hono-cloudflare": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-cloudflare/SKILL.md",
+      "computedHash": "123145c2b3743dd3937193a611757a9b42f864d41631dddab961ee5d0fd5e9a0"
+    },
+    "hono-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-core/SKILL.md",
+      "computedHash": "7fee42376327d5368c3952b19463718af9cbbed54dae06a42ede819764635c58"
+    },
+    "hono-jsx": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-jsx/SKILL.md",
+      "computedHash": "5cb594942c8f7151ed6c56a1f1e5c8f86ba753741030cecdc9505f3f58fb266e"
+    },
+    "hono-middleware": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-middleware/SKILL.md",
+      "computedHash": "090c40d65091524bddf4e5deb8af3244bd6127d746579fbb21c2c3b182523a85"
+    },
+    "hono-rpc": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-rpc/SKILL.md",
+      "computedHash": "f27f565ac6a4c1f38175774a5217d7128c87f05f4eb8c8718b5f21fb8f8d61aa"
+    },
+    "hono-testing": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-testing/SKILL.md",
+      "computedHash": "ea5df0c4a5d4821d34b0b358500acd479dfe444d28b5e0f4d291b4d7405290a8"
+    },
+    "hono-validation": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/hono/hono-validation/SKILL.md",
+      "computedHash": "e0a283104f084b583408adfa7d6be5915ed47b54a3eecf8251a2486a2e606c31"
+    },
+    "internal-comms": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/main/internal-comms/SKILL.md",
+      "computedHash": "6d47f0566b40ab2a3bc994738873cfc8b64f790482da6d1dd6081951e93b78b7"
+    },
+    "jest": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/testing/jest/SKILL.md",
+      "computedHash": "d45d376dfa7465184963c0300928fb352634334045e8a6315259978e372ed014"
+    },
+    "json-data-handling": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/data/json-data-handling/SKILL.md",
+      "computedHash": "fcabdb0961f42a58f7dec7694ce520efd1e336f3f57b573f16090ca41657ce01"
+    },
+    "kubernetes": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/infrastructure/kubernetes/SKILL.md",
+      "computedHash": "f62c70f341b07c2cc6e943b544c73e1ec4419e6f06ebc6f9d0be6c182c47653b"
+    },
+    "kysely": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/kysely/SKILL.md",
+      "computedHash": "e84a662edb358a9a151a5888a79a966332f8e8fb4e0289cf35169acf1fc0715c"
+    },
+    "langchain": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/frameworks/langchain/SKILL.md",
+      "computedHash": "28293b8e49f32b434c1830b1d86fd6c5815715404a35337a1435f8c88ae4824c"
+    },
+    "langgraph": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/frameworks/langgraph/SKILL.md",
+      "computedHash": "712a4647273ea19d7e75c44574ccb80ca241c3988f342ea8c3e8f2adf5ed953c"
+    },
+    "local-llm-ops": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/ops/local-llm-ops/SKILL.md",
+      "computedHash": "5049b5ddae8127f07b2fb4a0583171053ff48caee39eff75f5b6e3373a25b9ae"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "computedHash": "6498a736a8dc5c645047c8a875b8ea7417e2ad97146f005200e50d20a9337ada"
+    },
+    "media-transcoding": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/infrastructure/media-transcoding/SKILL.md",
+      "computedHash": "e425dd758f73247122bf0c6c7889efd2292e67d52516609f1972a03f3d0a0c76"
+    },
+    "migrate-radix-to-base": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/migrate-radix-to-base/SKILL.md",
+      "computedHash": "4fdc31bf287f674ba6bf91a648120f7b34cd7ef370f998f2cc116fed067789c5"
+    },
+    "model-context": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/protocols/model-context/SKILL.md",
+      "computedHash": "9a936560c6887f1dcc7a184130cc770283359cc397d8560c967b1b2289ff56cd"
+    },
+    "model-context-builder": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/main/model-context-builder/SKILL.md",
+      "computedHash": "203a34beb77c6363c82648978e557b9d0e35722d53eb6ffd8ec1e13385ca4cb1"
+    },
+    "mongodb": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/databases/mongodb/SKILL.md",
+      "computedHash": "5cd0dec605b255cf2ba9d35eca376239fb89fa1e280d7fd9f3c5ef8fd909ab4f"
+    },
+    "mpm-orchestration-demo": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/orchestration/mpm-orchestration-demo/SKILL.md",
+      "computedHash": "4250a969a57156f52a46ce29e00b14be3900b880eb1ee6a5a7d744ecbe79ca07"
+    },
+    "mypy": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/tooling/mypy/SKILL.md",
+      "computedHash": "213d129f71d0a57d3c5676276d3dd4f59ec0dd50ca3b2674704ce8a2e5fbfdc9"
+    },
+    "neon": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/database/neon/SKILL.md",
+      "computedHash": "a870a3ae92119e236855905e00ff3ca7f0d35308770e3eb72c5c851149b193fe"
+    },
+    "netlify": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/netlify/SKILL.md",
+      "computedHash": "d2e050c03174acf758827560727943eb6c611d0535f3c0e97b6da71f4611798a"
+    },
+    "nextjs": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/nextjs/SKILL.md",
+      "computedHash": "d2465ab0041cb0b26bab87e04eb49db55c3bfb710361c22ae48f67ecf7d7cf7d"
+    },
+    "nextjs-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/nextjs/nextjs-core/SKILL.md",
+      "computedHash": "7be13628701634cc247932703e54f4f17ec7a92bb9005d12c94ca8b7ea08f955"
+    },
+    "nextjs-v16": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/nextjs/nextjs-v16/SKILL.md",
+      "computedHash": "1ea684fea94f4b9fcf6c07865a99e061326c7680a3f5b00139ddbfde3cb692e9"
+    },
+    "nodejs-backend": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/frameworks/nodejs-backend/SKILL.md",
+      "computedHash": "13e236c0c03565e280c7ac3bfb20b03e062cbe29546aec90206dfbf1269cd835"
+    },
+    "openrouter": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/services/openrouter/SKILL.md",
+      "computedHash": "f04f5586d1a1fe24f82d443d0bbe36d120db9e674ea29750dbee6c63c7c16903"
+    },
+    "opentelemetry": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/observability/opentelemetry/SKILL.md",
+      "computedHash": "c12ba245aa426c927f208819e6fead4df135aa12e423e7f37abcab62407056f8"
+    },
+    "ort": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/ml/ort/SKILL.md",
+      "computedHash": "e8ee19a38fcef0ce91b9e557d5069f2556c55b1c2d0b7bc5c5128a4d2986f053"
+    },
+    "pdf": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pdf/SKILL.md",
+      "computedHash": "37226d4220d844377e6b2a386c51a011df4cd130855ff0b80bcc22f9c28abd57"
+    },
+    "phoenix-api-channels": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/elixir/frameworks/phoenix-api-channels/SKILL.md",
+      "computedHash": "f59f21a221c141bcd5a21596aa884919ca9ec4a192b24ea6c8fe686393e92c84"
+    },
+    "phoenix-liveview": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/elixir/frameworks/phoenix-liveview/SKILL.md",
+      "computedHash": "45a6d247ea67d6dfbe5a5d39554162ecde849e956019c06edf79375d81069355"
+    },
+    "phoenix-ops": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/elixir/ops/phoenix-ops/SKILL.md",
+      "computedHash": "db05759ee19b87d0bf8332ec116fed02db3d58f2093a33dd174e4782f878523b"
+    },
+    "playwright": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/testing/playwright/SKILL.md",
+      "computedHash": "51c36a38a26bdea5a4277670117f2f0eee1c7831f12a2503cb0c0fc29faf2c75"
+    },
+    "pptx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pptx/SKILL.md",
+      "computedHash": "2275e4d8dba1790d52f6619b3e2fed04edc948beef545a2ad18e4a1be644426d"
+    },
+    "pr-quality-checklist": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/universal/pr/pr-quality-checklist/SKILL.md",
+      "computedHash": "5f53eea8f78149384b5575c51ab58e274ded9ee75d110f03ee67de2988a8fe1d"
+    },
+    "pre-merge": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/verification/pre-merge/SKILL.md",
+      "computedHash": "31f2f1fb286807fc7ad37a0011d66d7556aaad2376df111bd6abe6679fd52dd3"
+    },
+    "prisma": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/prisma/SKILL.md",
+      "computedHash": "c0311b977c428ebf6a14a138b5140c968d2bb41e39afbce5e479ed96f14b3f22"
+    },
+    "pydantic": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/validation/pydantic/SKILL.md",
+      "computedHash": "e82a738f3ef5099e9436a1637b630f3a1f4d3bd99cdf2652fc1440c0b8eb1836"
+    },
+    "pyright": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/tooling/pyright/SKILL.md",
+      "computedHash": "2708e9bfca5009217980be8e0dbf99dea4c543b175ffd678f8783936315f2a3c"
+    },
+    "pytest": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/testing/pytest/SKILL.md",
+      "computedHash": "40acd8e19faeecd6793d359e3c0dd0af1642f0f3fd14f84bb183a5009db05e48"
+    },
+    "react-advanced": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/react/react-advanced/SKILL.md",
+      "computedHash": "5cc0926afb8ad1bbb00b34c8202ec036c4dffb19a9f32f321af6468085555087"
+    },
+    "react-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/react/react-core/SKILL.md",
+      "computedHash": "a8eef5778d951569549146d25eb388fe142142643e85e93ae00508d07668a13f"
+    },
+    "react-hooks-composition": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/react/react-hooks-composition/SKILL.md",
+      "computedHash": "f865663ee392cc28587dba4607b52335836bb3dde251a6385568b892d5ac4627"
+    },
+    "react-state-machine": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/react/react-state-machine/SKILL.md",
+      "computedHash": "269b026af326b96266e5546d0739abf539deca2d607283e50a02163a6a37b22e"
+    },
+    "receiving-code-review": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/receiving-code-review/SKILL.md",
+      "computedHash": "3f56080356c62e4f74a183d7371686babc661e41a952dc67a97c2c76fe8a9329"
+    },
+    "reporting-pipelines": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/data/reporting-pipelines/SKILL.md",
+      "computedHash": "a23106b112d265c15ee1c1facaf88967a38bed6177e35f2fa0d27fd6c28d1605"
+    },
+    "requesting-code-review": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/requesting-code-review/SKILL.md",
+      "computedHash": "25f2d0e303e75ce42f2e29f52901f9d77a41529d918f87258547b0fdbaae89aa"
+    },
+    "root-cause-tracing": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/debugging/root-cause-tracing/SKILL.md",
+      "computedHash": "71e72661243278139006dd6a917570e79892f866428ae9f22deaf5ed7cc2af59"
+    },
+    "rust-quality-gate": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/quality/rust-quality-gate/SKILL.md",
+      "computedHash": "ecd1eefb1f4d730766cded776209d2ffce5271d50a0761c9a9d82736f331620c"
+    },
+    "screenshot": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/verification/screenshot/SKILL.md",
+      "computedHash": "0448942cdb43ba257c0410a9cfb1aa9b74ff564ec9177196aa38e7a96465ea99"
+    },
+    "sec-edgar-pipeline": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/data/sec-edgar-pipeline/SKILL.md",
+      "computedHash": "2c05d989d77574d0508a82342a182ba46689f21acda49ce6de4a307ca1c06f4f"
+    },
+    "security-scanning": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/security/security-scanning/SKILL.md",
+      "computedHash": "7aa8723e44ba0ff2da1b6450501dd96bf0fc961ec3f0428b9fbba5fcfef90687"
+    },
+    "session-compression": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/techniques/session-compression/SKILL.md",
+      "computedHash": "85ebc6ae47c2bb266b24f920402d93222aa67d84a7697879f03bd12c9509f73c"
+    },
+    "shadcn": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ui/components/shadcn/SKILL.md",
+      "computedHash": "cfc627760e5222db0c7e594305f37b3875a092ff22f6e22b14dda3052462aa05"
+    },
+    "skill-creator": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/main/skill-creator/SKILL.md",
+      "computedHash": "b809f7f3523db1976aaa327b78afc8a91bfeb80bbea235037e2f0bcafc199719"
+    },
+    "slack-gif-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/slack-gif-creator/SKILL.md",
+      "computedHash": "a36e1ceb3f07eb37bdc259f1bfb18e48cc0e809b2e1651cb2369286cd66b2107"
+    },
+    "software-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/architecture/software-patterns/SKILL.md",
+      "computedHash": "f088e624bf24fa7167c6e264bfb9e14eee389334bc55b0f2635da7bb8b8d3edc"
+    },
+    "spring-boot": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/java/frameworks/spring-boot/SKILL.md",
+      "computedHash": "d9ac2e02918a819b57e980dd216487395688f88725741d47b542bf9c3c4f1445"
+    },
+    "sqlalchemy": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/data/sqlalchemy/SKILL.md",
+      "computedHash": "00b7617dedaf2cac2e73c769e6acde5250fb226d35a1954d92cc584fb3b8b067"
+    },
+    "stacked-prs": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/stacked-prs/SKILL.md",
+      "computedHash": "6a627a056f11c3278b5977d483794b0c437955c5f455a01b2999ee02897a0b26"
+    },
+    "subagent-driven-development": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/subagent-driven-development/SKILL.md",
+      "computedHash": "13f644a90690df7ffe77f85e078c37402fe24016e3e0e8732b6693b17625f160"
+    },
+    "supabase": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/backend/supabase/SKILL.md",
+      "computedHash": "4872155e52fd88d602dfd64928d2b8518643c80d5b1df06dafbc83f1da06c1ee"
+    },
+    "svelte": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/svelte/SKILL.md",
+      "computedHash": "c613e8b48b69a0e5e08f569ca4d6be52f70e161798d144f188c3fa9616690b20"
+    },
+    "svelte5-runes-static": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/svelte5-runes-static/SKILL.md",
+      "computedHash": "e54b3224e43c58941eca014ba38cbdd1020c9a63ab192e7aa36fbc793b124b79"
+    },
+    "sveltekit": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/sveltekit/SKILL.md",
+      "computedHash": "691da17aba213d0a94fb94b4fb8e87d8d8c3ed333f1a5491aa5ec6e21115e06c"
+    },
+    "systematic-debugging": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/debugging/systematic-debugging/SKILL.md",
+      "computedHash": "791a67510c4add460493182c8dd7812f8166a98b7390dddfc2f6427fae0ab422"
+    },
+    "tailwind": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ui/styling/tailwind/SKILL.md",
+      "computedHash": "bfb2be668936b4f16753b88f4470acef480fab0838a5c2a5e48f1b55d541f1d9"
+    },
+    "tanstack-query": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/state/tanstack-query/SKILL.md",
+      "computedHash": "628ba002a617a973fa0d1270075bed872b0bd589ce6ec51d333d5c9912221a49"
+    },
+    "tauri": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/rust/frameworks/tauri/SKILL.md",
+      "computedHash": "c7ccca0423a1249610ef3fd4d4e190b123c68c6b2fe092f7ad8d4a50bac2bcc6"
+    },
+    "template-skill": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "template/SKILL.md",
+      "computedHash": "daf176f2cd0030d321982d3e813fd1a794a0b4744c5a92d2931a37001bb40fb9"
+    },
+    "terraform": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/infrastructure/terraform/SKILL.md",
+      "computedHash": "56bbd7f6c80c5959c7a7820d29252c9cbd657a34738077ff59ec5fd1ac351c1e"
+    },
+    "test-driven-development": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/testing/test-driven-development/SKILL.md",
+      "computedHash": "e8dae4a404d57d753ce4481ac36bf3502ce0e9f7d0d1749fcec4d8732f8410f1"
+    },
+    "test-quality-inspector": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/testing/test-quality-inspector/SKILL.md",
+      "computedHash": "f6f9eaf58e2aeb1954b18ff50b0cda4614fa4bdecbe126a01b42de0653bd535d"
+    },
+    "testing-anti-patterns": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/testing/testing-anti-patterns/SKILL.md",
+      "computedHash": "787f08edb1fa8039e97c1567d908814c291bf546dd3d0647d62446ec027c30ad"
+    },
+    "theme-factory": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/theme-factory/SKILL.md",
+      "computedHash": "e9ec1fe85faa729e9f3d1731cd7e4e485f98c099ccc7c1c0d198f473aa4b654a"
+    },
+    "threat-modeling": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/security/threat-modeling/SKILL.md",
+      "computedHash": "9184b18665e2f2192a55d91a66c56345bfe2feb7c45fbe36680729fa45b7ba28"
+    },
+    "trpc": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/api/trpc/SKILL.md",
+      "computedHash": "5f5a19b158dd9b4061cd18830b6274d3ad03e983f7414086824697f9a2f394a9"
+    },
+    "typescript-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/typescript-core/SKILL.md",
+      "computedHash": "d562c3454297680ad3b9c096c8dfbf524d630bad9b8cbf3d2d7f163dac342c41"
+    },
+    "using-git-worktrees": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/using-git-worktrees/SKILL.md",
+      "computedHash": "212ad917e5543e84ea3adf4e3fab537675db976fdab05d4de432870e38b49e80"
+    },
+    "using-superpowers": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/using-superpowers/SKILL.md",
+      "computedHash": "e94af48fd52e1c329952fae638bde84671997744901c780281aff6e6986b8f1d"
+    },
+    "validated-handler": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/nextjs/api/validated-handler/SKILL.md",
+      "computedHash": "1ac3c921c964e807c94af17697570967bc6b8be0efce59f861c5b7360a021c46"
+    },
+    "vb-core": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/visualbasic/vb-core/SKILL.md",
+      "computedHash": "2b56ceccdb9be18adce496e50a42c987dd27112fe598e80f9a2ddbd8ca075d33"
+    },
+    "vb-database": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/visualbasic/database/vb-database/SKILL.md",
+      "computedHash": "4d2a5e87290c12e8e85d25e022ba28da75dc0371b97170ecf8564ac623aa345c"
+    },
+    "vb-winforms": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/visualbasic/frameworks/vb-winforms/SKILL.md",
+      "computedHash": "a0e9d622cb955b1849e061b769368cb7aab6f3bf51514cf9940819c709660353"
+    },
+    "vb6-legacy": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/visualbasic/legacy/vb6-legacy/SKILL.md",
+      "computedHash": "957f97360f34ff6052d17add1ff9d5bedb53fb726ba91242e76a8804b56e8aa1"
+    },
+    "vector-search-workflows": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/ai/techniques/vector-search-workflows/SKILL.md",
+      "computedHash": "ec380c1f2c39b56eb8236fab816c378fb1401c5190cf3c4a1f8fe1234a7871f3"
+    },
+    "vercel-ai": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-ai/SKILL.md",
+      "computedHash": "cf38c05f2d96cd7e01b1bfc789a76c0fac6e4e95829dbb5b27b3b1d0659ffb4a"
+    },
+    "vercel-cli-with-tokens": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-cli-with-tokens/SKILL.md",
+      "computedHash": "eb16b20dcbe6ce51e0372083d624e0847af1b09487ec99249227d5a8eddebfc0"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "computedHash": "575757e3e25761c8c562d6e395d29f0b76c98b1273c0bd72d88e6ab1bc9c7d42"
+    },
+    "vercel-deployments-builds": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-deployments-builds/SKILL.md",
+      "computedHash": "37fd1e1073574da264341f419cdff7c4b6ccae680137232ce7dbc2745b3a3f14"
+    },
+    "vercel-functions-runtime": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-functions-runtime/SKILL.md",
+      "computedHash": "6d5e1d2f6ce98c8cc9ab8d5ff37bece1785a5a36e5cb93c542ab808ae30bedbb"
+    },
+    "vercel-networking-domains": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-networking-domains/SKILL.md",
+      "computedHash": "32e1b826962a50bb1e44af498805f68da35b7843878eb6b713025ca1a7451749"
+    },
+    "vercel-observability": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-observability/SKILL.md",
+      "computedHash": "ab0ab4e848241716b7ba11b69e6828009dba3412d05e4979dbc33986cfc4a479"
+    },
+    "vercel-optimize": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-optimize/SKILL.md",
+      "computedHash": "ad0ef9c5c980f824e2ec19cba5c45426aba923a17e71fbaf6d1830574b62cc44"
+    },
+    "vercel-overview": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-overview/SKILL.md",
+      "computedHash": "c8f1ddca456ddb26544a56c89d69fc24191491ac57f5ee96bc2c954f5126c14d"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    },
+    "vercel-react-view-transitions": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-view-transitions/SKILL.md",
+      "computedHash": "c8952fc9127fa0564d0cb71dccb4215a5608ac933b5831104f09173a97a46f85"
+    },
+    "vercel-security-access": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-security-access/SKILL.md",
+      "computedHash": "35f55c9ecee18f0452c11405c1962f90877a805612907c60853204d39b2a2969"
+    },
+    "vercel-storage-data": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-storage-data/SKILL.md",
+      "computedHash": "f25337ef0e4dd524fb6d0d97f36ca95e9ddab1c01146b50e90ffcf5bc73b6fcf"
+    },
+    "vercel-teams-billing": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/platforms/deployment/vercel-teams-billing/SKILL.md",
+      "computedHash": "ec8b384ed770c4d7aa41ce1e2c9076d36e6c2d3dfb668da0ea832e3e9a4decd8"
+    },
+    "verification-before-completion": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/debugging/verification-before-completion/SKILL.md",
+      "computedHash": "dedbac8b4aa47f313e5b541662079d264c4367b1c76558f1a80c323e9a4f36a6"
+    },
+    "vitest": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/testing/vitest/SKILL.md",
+      "computedHash": "6e734028a850d7fc36562a0673586cd9aae094f6495d97f7a2a13ec958246ce0"
+    },
+    "vue": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/javascript/frameworks/vue/SKILL.md",
+      "computedHash": "18090d77e7ddcfd09c6182d83923bbb61d47b0daefd478f7da2c7d0dbb4c03ca"
+    },
+    "web-artifacts-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-artifacts-builder/SKILL.md",
+      "computedHash": "fdddbe9bb720ea1aea9292ee513ec10b2a8f4912e2c343bdc246ab3febd7c9b3"
+    },
+    "web-performance-optimization": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/web/web-performance-optimization/SKILL.md",
+      "computedHash": "ea3f22822f479f55678321ae9ad133e9927ab91450f6f2dfa1ae627023204cd0"
+    },
+    "webapp-testing": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/testing/webapp-testing/SKILL.md",
+      "computedHash": "82e9328bfa6f8ba5c29998b61baa276fcc455919e554122de03043b44afe2c39"
+    },
+    "wordpress-advanced-architecture": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/wordpress/wordpress-advanced-architecture/SKILL.md",
+      "computedHash": "775cad8a468fe8d96317602033acbefa02b71d7691da11e6dd38154b104200fc"
+    },
+    "wordpress-block-editor-fse": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/wordpress/wordpress-block-editor-fse/SKILL.md",
+      "computedHash": "3102fd80c0b726fc0a963c9c4c81ebb9facca593403a727f0440c28cca8c2ddb"
+    },
+    "wordpress-plugin-fundamentals": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/wordpress/wordpress-plugin-fundamentals/SKILL.md",
+      "computedHash": "284eb95f50d93dd97437adfa291a7bdb032413d9033039e97585d56799cd8ebe"
+    },
+    "wordpress-security-validation": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/wordpress/wordpress-security-validation/SKILL.md",
+      "computedHash": "14037f7c893e4cd7e05a360399c6103e68300c858d1dc325b73b1c3be54ab238"
+    },
+    "wordpress-testing-qa": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/php/frameworks/wordpress/wordpress-testing-qa/SKILL.md",
+      "computedHash": "ed009e2e4dd2554ab1169c3487605e4ff4b765e329f098dc9e8b6d803a23e8e3"
+    },
+    "writing-plans": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/collaboration/writing-plans/SKILL.md",
+      "computedHash": "5638f3449498c75d269bdb611762ab9b835b95e9278ae28bec03139529eadf3e"
+    },
+    "writing-skills": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/writing-skills/SKILL.md",
+      "computedHash": "2ad61dd96d969b2f582b11bb581f2fa912523e22c8763fbd105d6e46414bdaf2"
+    },
+    "xlsx": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "universal/data/xlsx/SKILL.md",
+      "computedHash": "32c46df598d3c05305b965d93de197faa9847769415deada0a2db6343280c776"
+    },
+    "zod": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/validation/zod/SKILL.md",
+      "computedHash": "b17f5bc9b5977317bbe45df6468faa69067b68278f6611cbfc47e152f8771bca"
+    },
+    "zustand": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/state/zustand/SKILL.md",
+      "computedHash": "df4ea62edc89045d65bac3bb7b7bb656d6340cea4c589a56131fa86aa504ee62"
+    }
+  }
+}

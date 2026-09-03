@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "outDir": "dist-electron",
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": ["electron/**/*.ts", "db/**/*.ts", "src/types/**/*.ts"],
+  "exclude": ["db/**/*.test.ts"]
+}

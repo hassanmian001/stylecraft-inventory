@@ -1,0 +1,183 @@
+{
+  "project": "StyleCraft Inventory Management Software",
+  "goal": "Build a Windows desktop inventory management app for a small business with around 50 products.",
+  "stack": {
+    "desktop": "Electron",
+    "frontend": "React + TypeScript",
+    "styling": "Tailwind CSS",
+    "components": "shadcn/ui",
+    "database": "SQLite",
+    "orm": "Drizzle ORM",
+    "testing": ["Vitest", "Playwright"],
+    "packaging": "electron-builder"
+  },
+  "businessRules": [
+    "Purchases increase stock.",
+    "Sales decrease stock.",
+    "Sales cannot exceed available stock.",
+    "Every stock change creates a stock movement record.",
+    "Profit is sale revenue minus purchase cost.",
+    "Business records should be preserved with inactive status where possible.",
+    "Backups must not overwrite older backups silently."
+  ],
+  "milestones": [
+    {
+      "id": 1,
+      "name": "Project scaffold",
+      "tasks": [
+        "Create Electron + React + TypeScript project",
+        "Configure Tailwind CSS",
+        "Configure shadcn/ui",
+        "Create app shell with sidebar navigation",
+        "Add placeholder Dashboard, Products, Purchases, Sales, Reports, Settings routes"
+      ],
+      "acceptanceCriteria": [
+        "The app starts locally",
+        "A desktop window opens",
+        "The main layout renders without errors"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Database layer",
+      "tasks": [
+        "Install SQLite dependency",
+        "Install Drizzle ORM",
+        "Create schema files",
+        "Create migrations",
+        "Add database connection module"
+      ],
+      "acceptanceCriteria": [
+        "Migrations run successfully",
+        "Database file is created",
+        "A sample query works"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Products module",
+      "tasks": [
+        "Build product list table",
+        "Build add/edit product form",
+        "Persist products in SQLite",
+        "Add search and filters",
+        "Add low-stock indicator"
+      ],
+      "acceptanceCriteria": [
+        "A product can be added",
+        "A product can be edited",
+        "Products persist after restart",
+        "Invalid product data is rejected"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Purchases module",
+      "tasks": [
+        "Build purchase form",
+        "Add supplier support",
+        "Add purchase history",
+        "Increase stock transactionally",
+        "Create stock movement record"
+      ],
+      "acceptanceCriteria": [
+        "Creating a purchase increases stock",
+        "A stock movement is recorded",
+        "Failed purchase transaction rolls back"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Sales module",
+      "tasks": [
+        "Build sale form",
+        "Add optional customer support",
+        "Decrease stock transactionally",
+        "Prevent overselling",
+        "Calculate profit",
+        "Create stock movement record"
+      ],
+      "acceptanceCriteria": [
+        "Creating a sale decreases stock",
+        "Overselling is blocked",
+        "Profit is calculated correctly",
+        "A stock movement is recorded"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Dashboard",
+      "tasks": [
+        "Show product count",
+        "Show inventory value",
+        "Show today sales",
+        "Show monthly sales",
+        "Show monthly profit",
+        "Show low-stock products",
+        "Show best-selling products"
+      ],
+      "acceptanceCriteria": [
+        "Dashboard numbers match database records"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Reports and exports",
+      "tasks": [
+        "Build sales report",
+        "Build purchase report",
+        "Build profit report",
+        "Build stock report",
+        "Add date filters",
+        "Add Excel export",
+        "Add PDF export"
+      ],
+      "acceptanceCriteria": [
+        "Reports match source records",
+        "Exports open correctly"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Invoices",
+      "tasks": [
+        "Generate invoice numbers",
+        "Build invoice view",
+        "Add print or save PDF",
+        "Use business settings on invoice"
+      ],
+      "acceptanceCriteria": [
+        "A sale can generate a readable invoice",
+        "Invoice totals match sale totals"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Backup and restore",
+      "tasks": [
+        "Create manual backup flow",
+        "Create restore flow",
+        "Add backup location setting",
+        "Avoid silent overwrite"
+      ],
+      "acceptanceCriteria": [
+        "Backup file is created",
+        "Restore returns previous data"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Windows packaging",
+      "tasks": [
+        "Configure electron-builder",
+        "Add app metadata",
+        "Build Windows installer"
+      ],
+      "acceptanceCriteria": [
+        "Packaged app starts",
+        "Data persists after restart"
+      ]
+    }
+  ]
+}
+
