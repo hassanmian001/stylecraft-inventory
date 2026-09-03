@@ -378,7 +378,20 @@ function saveVariants(db: DbClient, productId: number, variants: NormalizedVaria
   const keptIds = new Set<number>();
 
   for (const variant of variants) {
-    assertVariantSkuIsUnique(db, variant.sku, variant.id);
+    // Work out which row this entry will land on before checking the SKU, so a
+    // row keeping its own SKU is not reported as a duplicate of itself. An entry
+    // with no id still matches an existing size/colour: a plain product being
+    // saved again always arrives as one unnamed variant without an id.
+    const matchingRow =
+      variant.id !== null
+        ? existingVariants.find((row) => row.id === variant.id)
+        : existingVariants.find((row) => row.size === variant.size && row.color === variant.color && !keptIds.has(row.id));
+
+    if (variant.id !== null && matchingRow === undefined) {
+      throw new ProductValidationError("Size/colour was not found on this product.");
+    }
+
+    assertVariantSkuIsUnique(db, variant.sku, matchingRow?.id ?? null);
 
     const values = {
       productId,
@@ -392,32 +405,12 @@ function saveVariants(db: DbClient, productId: number, variants: NormalizedVaria
       isActive: variant.isActive,
     };
 
-    if (variant.id !== null) {
-      const existing = existingVariants.find((row) => row.id === variant.id);
-
-      if (existing === undefined) {
-        throw new ProductValidationError("Size/colour was not found on this product.");
-      }
-
+    if (matchingRow !== undefined) {
       db.update(productVariants)
         .set({ ...values, updatedAt: new Date() })
-        .where(eq(productVariants.id, variant.id))
+        .where(eq(productVariants.id, matchingRow.id))
         .run();
-      keptIds.add(variant.id);
-      continue;
-    }
-
-    // No id, but the product may already carry this size/colour — a plain product
-    // being saved again always arrives as one unnamed variant with no id. Match on
-    // the combination so the existing row is updated instead of duplicated.
-    const matching = existingVariants.find((row) => row.size === variant.size && row.color === variant.color && !keptIds.has(row.id));
-
-    if (matching !== undefined) {
-      db.update(productVariants)
-        .set({ ...values, updatedAt: new Date() })
-        .where(eq(productVariants.id, matching.id))
-        .run();
-      keptIds.add(matching.id);
+      keptIds.add(matchingRow.id);
       continue;
     }
 
