@@ -1,6 +1,6 @@
 {
   "name": "stylecraft-inventory-management",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Windows desktop inventory management software for StyleCraft.",
   "main": "dist-electron/electron/main.js",
   "productName": "StyleCraft Inventory",
