@@ -4,7 +4,9 @@ Desktop inventory management software for a small business with around 50 produc
 
 ## Current State
 
-Milestone 10 Windows packaging is implemented with SQLite persistence, including the database layer, Electron IPC bridge, preload API, Products UI, Purchases UI, Sales UI, live Dashboard UI, Reports UI, invoice preview/printing, manual backup/restore, and Windows installer packaging.
+SQLite persistence with the database layer, Electron IPC bridge, preload API, and screens for Products, Purchases, Sales, Returns, Ledger, Dashboard, Reports and Settings; invoice preview and printing; manual backup and restore; a Windows installer; and automatic updates from GitHub Releases.
+
+Stock is held per size and colour, sales and purchases can be left part paid and tracked on a khata, a recorded sale can be corrected behind a password, and the whole app has a dark mode.
 
 ## Dashboard
 
@@ -16,14 +18,21 @@ Milestone 10 Windows packaging is implemented with SQLite persistence, including
 
 ## Products
 
-- Add and edit products with validation.
+- One entry per style, with a table of its sizes and colours underneath.
+- Stock is held per size/colour; the product total is the sum of them.
+- A size can override the product's purchase price, selling price, or alert level; left blank it follows the product.
+- SKUs for each size/colour are filled in from the product SKU plus the size and colour, and can be typed over.
+- Click any row in the list to open that product for editing.
+- A style counts as low on stock when any one of its sizes is low.
+- Removing a size deletes it only if nothing references it; otherwise it is kept and deactivated so its history stays readable.
+- Stock adjustments are recorded against a specific size/colour.
 - Search products by name or SKU.
 - Filter products by category, low-stock status, and active status.
-- Show current stock and low-stock indicators.
 
 ## Purchases
 
-- Create supplier purchases with one or more product lines.
+- Create supplier purchases with one or more lines, each naming a product and a size/colour.
+- Record how much was paid now; anything short of the total stays on the supplier's khata.
 - Add suppliers inline while recording purchases.
 - Increase stock transactionally when a purchase is saved.
 - Record one stock movement per purchased product line.
@@ -31,13 +40,24 @@ Milestone 10 Windows packaging is implemented with SQLite persistence, including
 
 ## Sales
 
-- Create customer sales with one or more product lines.
+- Create customer sales with one or more lines, each naming a product and a size/colour.
+- Record how much was paid now; anything short of the total stays on the customer's khata.
+- Correct a recorded sale from its history row: the original stock deduction is put back and the new lines applied, so stock, profit and the customer's balance end up as if it had been entered that way.
+- Editing asks for the password set in Settings, checked in the main process. Sales that already have a return against them cannot be edited.
 - Add customers inline while recording sales.
 - Decrease stock transactionally when a sale is saved.
 - Block sales that exceed available stock.
 - Calculate sale totals, discounts, and profit from stored product cost.
 - Record one stock movement per sold product line.
 - Keep sale history with invoice number, customer, item count, total, profit, payment method, date, and notes.
+
+## Ledger
+
+- Customer khata: what each customer still owes, and supplier khata: what the shop still owes each supplier.
+- A balance is invoices minus payments minus returns, so nothing is counted twice.
+- Click a party to see a running statement of every invoice, payment and return against them.
+- Record a payment received or paid against an open balance.
+- Settled accounts are hidden until asked for.
 
 ## Reports
 
@@ -59,6 +79,11 @@ Milestone 10 Windows packaging is implemented with SQLite persistence, including
 - Create timestamped manual SQLite backups.
 - Prevent silent backup overwrite when a generated backup filename already exists.
 - Restore the active database from a selected backup file.
+
+## Appearance
+
+- Light, dark, or match the Windows setting; the choice is remembered and applied before the window paints.
+- Toggle from the sidebar, or pick the mode in Settings.
 
 ## Windows Packaging
 
